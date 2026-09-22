@@ -335,7 +335,7 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Avaliar no painel do Supabase a ativação da proteção contra senhas vazadas, apontada pelo advisor de segurança.
 - Avaliar posteriormente os três índices de chaves estrangeiras apontados pelo advisor de performance, sem aplicar alteração neste MVP.
 
-- Redirect URL do domínio de produção permanece pendente até ser adicionada no painel do Supabase.
+- Redirect URL do domínio de produção foi informada pelo usuário como adicionada no painel do Supabase; falta validar o login real nesse domínio.
 
 ### P4 — UX específica para iPhone
 
@@ -509,11 +509,12 @@ Não há pendências locais bloqueantes nesta frente. A validação de produçã
 - Deployment verificado como `READY`; build Next.js concluiu TypeScript, geração estática e rotas App Router.
 - `/api/health` respondeu `200 {"status":"ok"}` no deployment e no alias permanente.
 - `/login` respondeu com a interface de autenticação; `/manifest.webmanifest` respondeu com `display: standalone` e `start_url: /dashboard`.
+- Após a adição da Redirect URL, a abertura de `/auth/callback?code=invalid-test-code` redirecionou corretamente para `/login?error=auth_callback`, sem 404.
+- A validação de produção não registrou erros ou warnings no console do navegador.
 - Não foram encontrados erros de runtime no projeto Vercel no período de verificação.
 
 #### Pendência para concluir P8
 
-- Adicionar no Supabase Auth a Redirect URL `https://finance-pessoal-pwa.vercel.app/auth/callback`.
 - Testar login, logout, troca de usuário, renovação de sessão e confirmação de e-mail pelo domínio Vercel.
 - Confirmar no navegador a instalação PWA e o fluxo de avatar/exportações em produção.
 
