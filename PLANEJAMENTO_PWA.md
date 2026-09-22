@@ -380,12 +380,13 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Navegação inferior e abertura do menu lateral foram acionadas e verificadas por toque em viewport mobile.
 - Build, typecheck e 68 testes continuam aprovados; lint permanece sem erros.
 
-#### Linha do tempo de transações — validada localmente
+#### Linha do tempo de transações — publicada
 
 - A lista de `/transactions` passou a exibir o mês em foco e o mês anterior, com cabeçalhos e divisores horizontais. O seletor de mês desloca essa janela de dois meses.
 - Busca e filtros valem para os dois meses; o resumo e a exportação continuam limitados ao mês em foco. O agrupamento usa a data do lançamento (`date`), inclusive para parcelas.
 - Ocorrências recorrentes aparecem nos dois meses com indicação de previsão. Meses sem resultados recebem mensagem própria quando há lançamentos no outro mês.
 - Foram adicionados testes para virada de ano, separação dos totais, paginação, filtros, recorrências e navegação mensal. A suíte completa passou com 74 testes; build, typecheck e lint dos arquivos alterados passaram. A tela foi conferida em viewport de iPhone no navegador local e aprovada pelo usuário para commit e deploy. A validação no iPhone real continua pendente na frente P4.
+- Commit de implementação `3bd0f65` publicado em `main`. Deployment de produção `dpl_3u3os68hRAdeSca7GPF9GFYwrKdb` ficou `Ready` e foi associado a `https://finance-pessoal-pwa.vercel.app`; `/api/health` respondeu HTTP 200. A funcionalidade autenticada em produção ainda depende da validação do usuário no iPhone.
 
 Ainda pendentes nesta frente: validação visual e funcional em iPhone real, teclado nativo, modo standalone, rotação, conexão lenta e sessão expirada.
 
@@ -596,7 +597,7 @@ Ao concluir qualquer frente:
 | 2026-09-22 | Publicar em `https://finance-pessoal-pwa.vercel.app` | Domínio Vercel independente definido pelo usuário | Exige Redirect URL correspondente no Supabase |
 | 2026-09-22 | Executar push/deploy após autorização explícita | Usuário autorizou a publicação do PWA independente | Deployment de produção validado; autenticação ainda precisa de teste no domínio |
 | 2026-09-22 | Priorizar funcionalidade e compatibilidade mobile no iPhone | Uso familiar depende primeiro de fluxos essenciais estáveis no dispositivo | Exportações e avatar foram adiados para depois do MVP mobile |
-| 2026-09-22 | Exibir dois meses na linha do tempo de Transações | Facilita identificar o corte do mês sem trocar de tela | Resumo e exportação continuam restritos ao mês em foco; validação local aprovada e commit/deploy autorizados |
+| 2026-09-22 | Exibir dois meses na linha do tempo de Transações | Facilita identificar o corte do mês sem trocar de tela | Resumo e exportação continuam restritos ao mês em foco; commit `3bd0f65` e deployment de produção `dpl_3u3os68hRAdeSca7GPF9GFYwrKdb` publicados |
 
 ## 12. Evidências e referências
 
