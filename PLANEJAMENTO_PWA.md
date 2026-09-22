@@ -266,6 +266,7 @@ Não armazenar pelo service worker:
 - `sw.js` passou em `node --check`.
 - Servidor local respondeu `200` para manifesto, service worker, tela offline e ícone.
 - Headers CSP, `X-Frame-Options`, `X-Content-Type-Options` e `Referrer-Policy` confirmados localmente.
+- CSP permite `unsafe-eval` somente no desenvolvimento, mantendo a política de produção restritiva.
 - 60 testes, typecheck e build aprovados; lint sem erros, com 19 warnings preexistentes.
 
 ### P3 — Autenticação, RLS e Storage
@@ -369,7 +370,8 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Header mobile respeita a safe area superior.
 - Formulários principais receberam espaçamento responsivo, áreas de toque mínimas e campos numéricos adequados para teclado móvel.
 - Modal de recorrência recebeu rolagem limitada e padding de safe area para uso com teclado aberto.
-- Build, typecheck e 62 testes continuam aprovados.
+- Hostname do Storage Supabase configurado no `next/image`, permitindo exibir avatares remotos no perfil.
+- Build, typecheck e 68 testes continuam aprovados.
 
 Ainda pendentes nesta frente: revisão dos demais formulários, gráficos, tabelas e validação visual em iPhone real.
 
