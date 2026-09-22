@@ -6,7 +6,7 @@
 
 **Atualizado em:** 2026-09-22  
 **Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento; P5 permanece pendente.
-**Próxima frente:** continuar a adaptação mobile da P4 e validar exportações/avatar na P5, mantendo os testes reais em iPhone como pendência explícita.
+**Próxima frente:** priorizar a adaptação mobile da P4 e a validação em iPhone real; exportações e avatar ficam em prioridade baixa.
 
 ### Frentes concluídas
 
@@ -377,7 +377,7 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 
 Ainda pendentes nesta frente: revisão dos demais formulários, gráficos, tabelas e validação visual em iPhone real.
 
-### P5 — Exportações e avatar
+### P5 — Exportações e avatar (prioridade baixa)
 
 **Status:** pendente.  
 **Estimativa:** 2–3 dias.
