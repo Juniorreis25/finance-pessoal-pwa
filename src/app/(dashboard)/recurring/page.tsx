@@ -114,10 +114,10 @@ export default function RecurringExpensesPage() {
     const recurringBalance = totalRecurringIncome - totalRecurringExpense
 
     return (
-        <div className="space-y-8 max-w-5xl mx-auto">
+        <div className="space-y-6 max-w-5xl mx-auto sm:space-y-8">
             {/* Header */}
             {/* Header with Title and Global Action */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">Transações Recorrentes</h1>
                     <p className="text-slate-400">Gerencie seus ganhos e pagamentos fixos mensais.</p>
@@ -125,7 +125,7 @@ export default function RecurringExpensesPage() {
 
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="flex items-center justify-center w-[52px] h-[52px] bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer"
+                    className="flex min-h-[52px] min-w-[52px] items-center justify-center self-end bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer sm:self-auto"
                     title="Nova Recorrência"
                 >
                     <Plus className="w-6 h-6" strokeWidth={3} />
@@ -157,12 +157,12 @@ export default function RecurringExpensesPage() {
             />
 
             {/* Master Summary Card - Standardized Minimal Layout */}
-            <div className="relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                 {/* Background decorative elements */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-success/5 blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-                <div className="relative flex flex-col md:flex-row justify-between items-center gap-8">
+                <div className="relative flex flex-col items-start justify-between gap-6 sm:gap-8 md:flex-row md:items-center">
                     {/* Left Side: Balance (Sobra Mensal) */}
                     <div className="flex-1 space-y-4">
                         <div className="flex items-center gap-3">
@@ -172,7 +172,7 @@ export default function RecurringExpensesPage() {
                             </div>
                             <button
                                 onClick={toggleVisibility}
-                                className="p-2 text-slate-500 hover:text-white transition-colors cursor-pointer"
+                                className="flex min-h-11 min-w-11 items-center justify-center p-2 text-slate-500 hover:text-white transition-colors cursor-pointer"
                                 aria-label={isValuesVisible ? "Ocultar valores" : "Mostrar valores"}
                             >
                                 {isValuesVisible ? (
@@ -183,7 +183,7 @@ export default function RecurringExpensesPage() {
                             </button>
                         </div>
 
-                        <h2 className={`text-4xl md:text-5xl font-black tracking-tighter transition-all duration-500 ${recurringBalance >= 0 ? 'text-brand-accent drop-shadow-[0_0_15px_rgba(0,240,255,0.1)]' : 'text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.1)]'}`}>
+                        <h2 className={`text-3xl font-black tracking-tighter transition-all duration-500 sm:text-4xl md:text-5xl ${recurringBalance >= 0 ? 'text-brand-accent drop-shadow-[0_0_15px_rgba(0,240,255,0.1)]' : 'text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.1)]'}`}>
                             <MaskedValue value={recurringBalance} prefix={isValuesVisible ? "R$ " : ""} />
                         </h2>
                     </div>
@@ -234,9 +234,9 @@ export default function RecurringExpensesPage() {
                         {filteredExpenses.map((expense) => (
                             <div
                                 key={expense.id}
-                                className={`relative group bg-slate-900 p-5 rounded-2xl flex items-center justify-between border ${!expense.active ? 'border-dashed border-slate-700 opacity-70' : 'border-slate-800'} shadow-sm hover:shadow-md transition-all`}
+                                className={`relative group bg-slate-900 p-4 sm:p-5 rounded-2xl flex flex-col items-start justify-between gap-4 border ${!expense.active ? 'border-dashed border-slate-700 opacity-70' : 'border-slate-800'} shadow-sm hover:shadow-md transition-all sm:flex-row sm:items-center`}
                             >
-                                <div className="flex items-center gap-5">
+                                <div className="flex min-w-0 items-center gap-4 sm:gap-5">
                                     <div className={`p-3 rounded-full ${expense.type === 'income' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'} ${!expense.active ? 'grayscale opacity-50' : ''}`}>
                                         <Repeat className="w-6 h-6" />
                                     </div>
@@ -256,7 +256,7 @@ export default function RecurringExpensesPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-8">
+                                <div className="flex w-full items-center justify-between gap-4 sm:w-auto sm:gap-8">
                                     <span className={`text-xl font-bold tracking-tight ${expense.type === 'income' ? 'text-emerald-500' : 'text-white'}`}>
                                         {expense.type === 'income' ? '+' : '-'} R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                                     </span>
@@ -264,15 +264,15 @@ export default function RecurringExpensesPage() {
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => toggleStatus(expense.id, expense.active)}
-                                            className={`p-2 rounded-lg transition-colors ${expense.active ? 'text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                                            className={`flex min-h-11 min-w-11 items-center justify-center p-2 rounded-lg transition-colors ${expense.active ? 'text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
                                             title={expense.active ? "Desativar" : "Ativar"}
                                         >
                                             {expense.active ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                                         </button>
-                                        <Link href={`/recurring/${expense.id}/edit`} className="p-2 text-slate-400 hover:text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-lg transition-colors cursor-pointer" title="Editar Recorrência">
+                                        <Link href={`/recurring/${expense.id}/edit`} className="flex min-h-11 min-w-11 items-center justify-center p-2 text-slate-400 hover:text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-900/20 rounded-lg transition-colors cursor-pointer" title="Editar Recorrência">
                                             <Edit2 className="w-4 h-4" />
                                         </Link>
-                                        <button onClick={() => handleDelete(expense.id)} className="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors cursor-pointer" title="Excluir Recorrência">
+                                        <button onClick={() => handleDelete(expense.id)} className="flex min-h-11 min-w-11 items-center justify-center p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition-colors cursor-pointer" title="Excluir Recorrência">
                                             <Trash2 className="w-4 h-4" />
                                         </button>
                                     </div>

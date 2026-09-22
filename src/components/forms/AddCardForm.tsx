@@ -127,7 +127,7 @@ export function CardForm({ initialData }: CardFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8 bg-brand-deep-sea p-5 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl border border-white/5 max-w-2xl mx-auto relative overflow-hidden">
+        <form onSubmit={handleSubmit} className="space-y-8 bg-brand-deep-sea p-4 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl border border-white/5 max-w-2xl mx-auto relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
             <div className="flex items-center gap-4 mb-2">
@@ -176,7 +176,7 @@ export function CardForm({ initialData }: CardFormProps) {
                         inputMode="numeric"
                         required
                         placeholder="R$ 0,00"
-                        className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-5xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter"
+                        className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-4xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-5xl"
                         value={formData.limit_amount}
                         onChange={handleAmountChange}
                     />
@@ -224,7 +224,7 @@ export function CardForm({ initialData }: CardFormProps) {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                    className="min-h-12 w-full flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
                 >
                     {loading ? (
                         <Loader2 className="animate-spin w-5 h-5" />
@@ -241,7 +241,7 @@ export function CardForm({ initialData }: CardFormProps) {
                 <button
                     type="button"
                     onClick={() => router.back()}
-                    className="w-full mt-4 flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-brand-gray/50 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all"
+                    className="min-h-11 w-full mt-4 flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-brand-gray/50 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all"
                 >
                     Cancelar Operação
                 </button>

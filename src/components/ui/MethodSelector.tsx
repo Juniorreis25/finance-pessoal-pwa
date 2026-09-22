@@ -79,7 +79,7 @@ export function MethodSelector({ cards, selectedIds, onChange }: MethodSelectorP
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full pl-5 pr-12 py-3.5 bg-brand-deep-sea border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white outline-none focus:border-brand-accent/50 transition-all cursor-pointer shadow-xl flex items-center justify-between text-left h-[52px]"
+                className="min-h-[52px] w-full pl-5 pr-12 py-3.5 bg-brand-deep-sea border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white outline-none focus:border-brand-accent/50 transition-all cursor-pointer shadow-xl flex items-center justify-between text-left"
             >
                 <div className="flex items-center gap-3 overflow-hidden">
                     <Filter className="w-4 h-4 text-brand-accent shrink-0 opacity-50" />
@@ -94,7 +94,7 @@ export function MethodSelector({ cards, selectedIds, onChange }: MethodSelectorP
                         <button
                             type="button"
                             onClick={() => toggleId('all')}
-                            className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
+                            className="min-h-11 w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
                         >
                             <span className={`text-[10px] font-bold uppercase tracking-widest ${selectedIds.includes('all') ? 'text-brand-accent' : 'text-slate-400'}`}>Todos os Métodos</span>
                             {selectedIds.includes('all') && <Check className="w-4 h-4 text-brand-accent" />}
@@ -105,7 +105,7 @@ export function MethodSelector({ cards, selectedIds, onChange }: MethodSelectorP
                         <button
                             type="button"
                             onClick={() => toggleId('cash')}
-                            className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
+                            className="min-h-11 w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
                         >
                             <span className={`text-[10px] font-bold uppercase tracking-widest ${selectedIds.includes('cash') ? 'text-brand-accent' : 'text-slate-400'}`}>Dinheiro/Débito</span>
                             {selectedIds.includes('cash') && <Check className="w-4 h-4 text-brand-accent" />}
@@ -116,7 +116,7 @@ export function MethodSelector({ cards, selectedIds, onChange }: MethodSelectorP
                                 key={card.id}
                                 type="button"
                                 onClick={() => toggleId(card.id)}
-                                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
+                            className="min-h-11 w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
                             >
                                 <span className={`text-[10px] font-bold uppercase tracking-widest ${selectedIds.includes(card.id) ? 'text-brand-accent' : 'text-slate-400'}`}>{card.name}</span>
                                 {selectedIds.includes(card.id) && <Check className="w-4 h-4 text-brand-accent" />}

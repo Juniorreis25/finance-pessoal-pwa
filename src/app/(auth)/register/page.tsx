@@ -112,7 +112,7 @@ export default function RegisterPage() {
                                 placeholder="seu@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pl-10 pr-4 text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600"
+                                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pl-10 pr-4 text-base text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 sm:text-sm"
                                 required
                             />
                         </div>
@@ -129,7 +129,7 @@ export default function RegisterPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 minLength={6}
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-slate-900 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white transition-all"
+                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-base text-slate-900 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white transition-all sm:text-sm"
                                 required
                             />
                         </div>
@@ -138,7 +138,7 @@ export default function RegisterPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full rounded-xl bg-brand-600 py-3 font-bold text-white transition-all hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/20 disabled:opacity-50 flex items-center justify-center gap-2 transform active:scale-95"
+                        className="min-h-12 w-full rounded-xl bg-brand-600 py-3 font-bold text-white transition-all hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/20 disabled:opacity-50 flex items-center justify-center gap-2 transform active:scale-95"
                     >
                         {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (
                             <>

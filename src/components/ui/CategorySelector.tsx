@@ -23,7 +23,7 @@ export function CategorySelector({ selectedCategory, onCategoryChange }: Categor
                 aria-label="Selecionar Categoria"
                 value={selectedCategory}
                 onChange={(e) => onCategoryChange(e.target.value)}
-                className="pl-9 pr-8 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 hover:border-brand-500/30 transition-all cursor-pointer appearance-none min-w-[140px] dark:[color-scheme:dark]"
+                className="w-full min-h-[52px] pl-9 pr-8 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl text-sm font-medium text-slate-700 dark:text-slate-300 focus:outline-none focus:ring-2 focus:ring-brand-500 hover:border-brand-500/30 transition-all cursor-pointer appearance-none sm:w-auto sm:min-w-[140px] dark:[color-scheme:dark]"
             >
                 <option value="">Todas Categorias</option>
                 {allCategories.map((cat) => (

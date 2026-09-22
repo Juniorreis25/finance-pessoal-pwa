@@ -12,14 +12,14 @@ export function CardDistributionChart({ data }: { data: CardDistData[] }) {
     const isMobile = useIsMobile(640)
 
     if (!data || data.length === 0 || data.every(d => d.valor === 0)) {
-        return <div className="h-[300px] flex items-center justify-center text-slate-500 font-medium">Sem faturas para este mês</div>
+        return <div className="h-[300px] min-h-[300px] flex items-center justify-center text-slate-500 font-medium">Sem faturas para este mês</div>
     }
 
     const COLORS = ['#00F0FF', '#00FF94', '#FFFFFF', '#8E8E93']
 
     return (
-        <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[300px] min-h-[300px] min-w-0 w-full">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={300} initialDimension={{ width: 1, height: 300 }}>
                 <BarChart
                     data={data}
                     layout="vertical"

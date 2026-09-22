@@ -135,7 +135,7 @@ export default function LoginPage() {
                                         placeholder="seu@email.com"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full rounded-xl border border-white/10 bg-slate-950/50 py-2.5 pl-10 pr-4 text-sm text-white outline-none 
+                                        className="w-full rounded-xl border border-white/10 bg-slate-950/50 py-2.5 pl-10 pr-4 text-base text-white outline-none sm:text-sm
                                         focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/20 
                                         transition-all placeholder:text-brand-gray/40 backdrop-blur-sm hover:border-white/20"
                                         required
@@ -156,7 +156,7 @@ export default function LoginPage() {
                                         placeholder="••••••••"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full rounded-xl border border-white/10 bg-slate-950/50 py-2.5 pl-10 pr-4 text-sm text-white outline-none 
+                                        className="w-full rounded-xl border border-white/10 bg-slate-950/50 py-2.5 pl-10 pr-4 text-base text-white outline-none sm:text-sm
                                         focus:border-brand-accent/50 focus:ring-2 focus:ring-brand-accent/20 
                                         transition-all placeholder:text-brand-gray/40 backdrop-blur-sm hover:border-white/20"
                                         required
@@ -168,7 +168,7 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full rounded-xl bg-gradient-to-r from-brand-accent to-brand-accent/90 py-3 font-bold text-sm text-black
+                                className="min-h-12 w-full rounded-xl bg-gradient-to-r from-brand-accent to-brand-accent/90 py-3 font-bold text-sm text-black
                                 transition-all hover:shadow-lg hover:shadow-brand-accent/25 hover:scale-[1.01]
                                 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
                                 flex items-center justify-center gap-2 transform active:scale-95"

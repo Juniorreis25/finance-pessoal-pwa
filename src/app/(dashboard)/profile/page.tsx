@@ -193,9 +193,9 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto py-8">
+        <div className="max-w-2xl mx-auto py-2 sm:py-8">
             <div className="mb-10 px-4">
-                <h1 className="text-4xl font-extrabold text-white tracking-tighter uppercase mb-2">
+                <h1 className="text-3xl font-extrabold text-white tracking-tighter uppercase mb-2 sm:text-4xl">
                     Meu <span className="text-brand-accent">Perfil</span>
                 </h1>
                 <p className="text-brand-gray text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Personalização de Experiência</p>
@@ -246,7 +246,7 @@ export default function ProfilePage() {
                                 <button
                                     type="button"
                                     onClick={handleRemoveAvatar}
-                                    className="absolute top-2 right-2 p-3 bg-white text-black rounded-full hover:scale-110 transition-all shadow-xl z-20"
+                                    className="absolute top-2 right-2 flex min-h-11 min-w-11 items-center justify-center p-3 bg-white text-black rounded-full hover:scale-110 transition-all shadow-xl z-20"
                                     title="Remover Foto"
                                 >
                                     <X className="w-4 h-4" strokeWidth={3} />

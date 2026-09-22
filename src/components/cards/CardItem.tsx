@@ -152,7 +152,7 @@ export function CardItem({ card, onUpdate }: { card: Card, onUpdate?: () => void
                 <button
                     onClick={toggleStatus}
                     disabled={isUpdating}
-                    className={`p-1.5 sm:p-2 rounded-full transition-all backdrop-blur-sm shadow-lg border border-white/10 cursor-pointer ${isUpdating ? 'opacity-50 scale-90' : 'hover:scale-110'} ${card.active ? 'bg-slate-800/80 text-white hover:bg-amber-500' : 'bg-amber-500 text-white hover:bg-emerald-500'}`}
+                    className={`flex min-h-11 min-w-11 items-center justify-center p-1.5 sm:p-2 rounded-full transition-all backdrop-blur-sm shadow-lg border border-white/10 cursor-pointer ${isUpdating ? 'opacity-50 scale-90' : 'hover:scale-110'} ${card.active ? 'bg-slate-800/80 text-white hover:bg-amber-500' : 'bg-amber-500 text-white hover:bg-emerald-500'}`}
                     title={card.active ? 'Inativar Cartão' : 'Ativar Cartão'}
                 >
                     {isUpdating ? (
@@ -161,10 +161,10 @@ export function CardItem({ card, onUpdate }: { card: Card, onUpdate?: () => void
                         card.active ? <CalendarX className="w-3.5 sm:w-4 h-3.5 sm:h-4" /> : <CalendarCheck className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                     )}
                 </button>
-                <Link href={`/cards/${card.id}/edit`} className="p-1.5 sm:p-2 bg-slate-800/80 text-white rounded-full hover:bg-brand-500 hover:text-slate-900 transition-colors backdrop-blur-sm shadow-lg border border-white/10 cursor-pointer flex items-center justify-center" title="Editar Cartão">
+                <Link href={`/cards/${card.id}/edit`} className="flex min-h-11 min-w-11 items-center justify-center p-1.5 sm:p-2 bg-slate-800/80 text-white rounded-full hover:bg-brand-500 hover:text-slate-900 transition-colors backdrop-blur-sm shadow-lg border border-white/10 cursor-pointer" title="Editar Cartão">
                     <Edit2 className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                 </Link>
-                <button onClick={handleDelete} className="p-1.5 sm:p-2 bg-slate-800/80 text-white rounded-full hover:bg-rose-500 hover:text-white transition-colors backdrop-blur-sm shadow-lg border border-white/10 cursor-pointer flex items-center justify-center" title="Excluir Cartão">
+                <button onClick={handleDelete} className="flex min-h-11 min-w-11 items-center justify-center p-1.5 sm:p-2 bg-slate-800/80 text-white rounded-full hover:bg-rose-500 hover:text-white transition-colors backdrop-blur-sm shadow-lg border border-white/10 cursor-pointer" title="Excluir Cartão">
                     <Trash2 className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
                 </button>
             </div>

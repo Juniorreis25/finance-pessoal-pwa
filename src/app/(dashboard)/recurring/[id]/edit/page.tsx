@@ -144,15 +144,15 @@ export default function EditRecurringExpensePage() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto py-8">
+        <div className="max-w-2xl mx-auto py-2 sm:py-8">
             <div className="mb-10 px-4">
-                <h1 className="text-4xl font-extrabold text-white tracking-tighter uppercase mb-2">
+                <h1 className="text-3xl font-extrabold text-white tracking-tighter uppercase mb-2 sm:text-4xl">
                     Editar <span className="text-brand-accent">Recorrência</span>
                 </h1>
                 <p className="text-brand-gray text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Gestão de Fluxo de Caixa</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8 bg-brand-deep-sea p-10 rounded-[2.5rem] shadow-2xl border border-white/5 relative overflow-hidden">
+            <form onSubmit={handleSubmit} className="space-y-8 bg-brand-deep-sea p-4 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl border border-white/5 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
                 {error && (
@@ -162,7 +162,7 @@ export default function EditRecurringExpensePage() {
                 )}
 
                 <div className="space-y-6 relative z-10 font-sans">
-                    <div className="bg-brand-nav p-8 rounded-[2rem] border border-white/5">
+                    <div className="bg-brand-nav p-5 sm:p-8 rounded-[2rem] border border-white/5">
                         <label htmlFor="amount" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-3 opacity-60">
                             VALOR MENSAL (R$)
                         </label>
@@ -173,7 +173,7 @@ export default function EditRecurringExpensePage() {
                             inputMode="numeric"
                             required
                             placeholder="R$ 0,00"
-                            className="w-full bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-5xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter"
+                            className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-4xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-5xl"
                             value={formData.amount}
                             onChange={handleAmountChange}
                         />
@@ -246,7 +246,7 @@ export default function EditRecurringExpensePage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                        className="min-h-12 w-full flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
                     >
                         {loading ? (
                             <Loader2 className="animate-spin w-5 h-5" />
@@ -263,7 +263,7 @@ export default function EditRecurringExpensePage() {
                     <button
                         type="button"
                         onClick={() => router.back()}
-                        className="w-full mt-4 flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-brand-gray/50 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all"
+                        className="min-h-11 w-full mt-4 flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-brand-gray/50 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all"
                     >
                         Cancelar Edição
                     </button>

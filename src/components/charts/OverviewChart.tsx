@@ -14,8 +14,8 @@ export function OverviewChart({ data }: { data: OverviewData[] }) {
     }
 
     return (
-        <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[300px] min-h-[300px] min-w-0 w-full">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={300} initialDimension={{ width: 1, height: 300 }}>
                 <BarChart
                     data={data}
                     margin={{ top: 0, right: 0, left: -20, bottom: 0 }}

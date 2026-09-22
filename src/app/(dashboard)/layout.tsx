@@ -44,6 +44,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div
                     className="fixed inset-0 bg-black/50 z-40 lg:hidden"
                     onClick={() => setIsSidebarOpen(false)}
+                    aria-hidden="true"
                 />
             )}
 
@@ -54,7 +55,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         h-[100dvh]
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
-                <div className="h-full flex flex-col">
+                <div className="h-full flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
                     <div className="p-4 border-b border-white/5">
                         <Link href="/dashboard" className="flex items-center justify-center w-full hover:bg-white/5 p-3 rounded-2xl transition-all group" title="Ir para Visão Geral">
                             <LogoDiamond size="small" showText={true} animated={false} />
@@ -98,29 +99,30 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* Main Content */}
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* Mobile Header */}
-                <header className="lg:hidden flex items-center justify-between px-4 pb-4 pt-[max(1rem,env(safe-area-inset-top))] bg-background border-b border-white/5">
+                <header className="lg:hidden flex min-h-16 items-center justify-between px-4 pb-3 pt-[max(1rem,env(safe-area-inset-top))] bg-background border-b border-white/5">
                     <Link href="/dashboard" className="flex items-center p-1 -ml-1 rounded-lg hover:bg-white/5 transition-colors" title="Ir para Visão Geral">
                         <LogoDiamond size="small" showText={false} animated={false} />
                     </Link>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setIsSidebarOpen(true)}
-                            className="p-2 text-brand-gray hover:bg-white/5 rounded-full transition-all"
+                            className="flex min-h-11 min-w-11 items-center justify-center p-2 text-brand-gray hover:bg-white/5 rounded-full transition-all"
+                            aria-label="Abrir menu de navegação"
                         >
                             <Menu className="w-6 h-6 text-white" />
                         </button>
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-auto p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] lg:p-8 lg:pb-8">
+                <div className="flex-1 overflow-x-hidden overflow-y-auto p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:p-6 lg:p-8 lg:pb-8">
                     <div className="max-w-6xl mx-auto">
                         {children}
                     </div>
                 </div>
 
                 {/* Bottom Navigation (Mobile) */}
-                <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/5 bg-brand-nav/95 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-2xl lg:hidden">
-                    <div className="grid h-16 grid-cols-5 px-1">
+                <nav aria-label="Navegação principal" className="fixed bottom-0 left-0 right-0 z-40 border-t border-white/5 bg-brand-nav/95 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-2xl lg:hidden">
+                    <div className="grid min-h-16 grid-cols-5 px-1">
                         {navItems.map((item) => {
                             const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`)
                             return (
@@ -128,7 +130,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     key={item.href}
                                     href={item.href}
                                     aria-current={isActive ? 'page' : undefined}
-                                    className={`flex min-h-11 flex-col items-center justify-center gap-1 rounded-xl px-1 text-center transition-colors ${isActive ? 'text-brand-accent' : 'text-brand-gray hover:bg-white/5'}`}
+                                    className={`flex min-h-11 min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 text-center transition-colors ${isActive ? 'text-brand-accent' : 'text-brand-gray hover:bg-white/5'}`}
                                 >
                                     <item.icon className={`h-5 w-5 ${isActive ? 'glow-cyan' : ''}`} />
                                     <span className="text-[9px] font-bold uppercase tracking-wide">{item.label.split(' ')[0]}</span>

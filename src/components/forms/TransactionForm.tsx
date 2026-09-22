@@ -275,7 +275,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
     const incomeCategories = ['Freelance', 'Investimentos', 'Salário', 'Outros']
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 bg-brand-deep-sea p-5 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border border-white/5 max-w-xl mx-auto relative overflow-hidden">
+        <form onSubmit={handleSubmit} className="space-y-6 bg-brand-deep-sea p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border border-white/5 max-w-xl mx-auto relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
             {/* Type Toggle - Neo Style */}
@@ -283,7 +283,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                 <button
                     type="button"
                     onClick={() => setType('expense')}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${type === 'expense'
+                    className={`min-h-11 flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${type === 'expense'
                         ? 'bg-[#FF3B6B] text-white shadow-lg shadow-[#FF3B6B]/20'
                         : 'text-brand-gray hover:text-white'
                         }`}
@@ -297,7 +297,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                         setType('income')
                         setIsInstallment(false)
                     }}
-                    className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${type === 'income'
+                    className={`min-h-11 flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${type === 'income'
                         ? 'bg-brand-success text-black shadow-lg shadow-brand-success/20'
                         : 'text-brand-gray hover:text-white'
                         }`}
@@ -325,7 +325,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                         inputMode="numeric"
                         required
                         placeholder="R$ 0,00"
-                        className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-4xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter"
+                        className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-3xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-4xl"
                         value={formData.amount}
                         onChange={handleAmountChange}
                         autoFocus
@@ -455,7 +455,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                                     aria-label="Marcar despesa como parcelada"
                                     aria-pressed={isInstallment}
                                     onClick={() => { const next = !isInstallment; setIsInstallment(next); if (next) setIsRecurring(false) }}
-                                    className={`w-12 h-7 rounded-full transition-all relative ${isInstallment ? 'bg-brand-accent' : 'bg-white/10'}`}
+                                    className={`relative min-h-11 w-12 rounded-full transition-all ${isInstallment ? 'bg-brand-accent' : 'bg-white/10'}`}
                                 >
                                     <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all shadow-xl ${isInstallment ? 'left-6' : 'left-1'}`} />
                                 </button>
@@ -503,7 +503,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                                     type="button"
                                     aria-label="Marcar receita como recorrente"
                                     aria-pressed={isRecurring}
-                                    onClick={() => { const next = !isRecurring; setIsRecurring(next); if (next) setIsInstallment(false) }}                                    className={`w-12 h-7 rounded-full transition-all relative ${isRecurring ? 'bg-brand-success' : 'bg-white/10'}`}
+                                    onClick={() => { const next = !isRecurring; setIsRecurring(next); if (next) setIsInstallment(false) }}                                    className={`relative min-h-11 w-12 rounded-full transition-all ${isRecurring ? 'bg-brand-success' : 'bg-white/10'}`}
                                 >
                                     <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all shadow-xl ${isRecurring ? 'left-6' : 'left-1'}`} />
                                 </button>
@@ -527,7 +527,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                             aria-label="Marcar despesa como recorrente"
                             aria-pressed={isRecurring}
                             onClick={() => { const next = !isRecurring; setIsRecurring(next); if (next) setIsInstallment(false) }}
-                            className={`w-12 h-7 rounded-full transition-all relative ${isRecurring ? 'bg-brand-success' : 'bg-white/10'}`}
+                            className={`relative min-h-11 w-12 rounded-full transition-all ${isRecurring ? 'bg-brand-success' : 'bg-white/10'}`}
                         >
                             <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all shadow-xl ${isRecurring ? 'left-6' : 'left-1'}`} />
                         </button>
@@ -538,7 +538,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                    className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
                 >
                     {loading ? (
                         <Loader2 className="animate-spin w-5 h-5" />
@@ -554,7 +554,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                 <button
                     type="button"
                     onClick={() => router.push('/transactions')}
-                    className="flex-1 flex items-center justify-center gap-2 px-8 py-5 bg-white/5 text-brand-gray rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-white/10 hover:text-white transition-all border border-white/5"
+                    className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-5 bg-white/5 text-brand-gray rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-white/10 hover:text-white transition-all border border-white/5"
                 >
                     <X className="w-4 h-4 italic" />
                     <span>Cancelar</span>

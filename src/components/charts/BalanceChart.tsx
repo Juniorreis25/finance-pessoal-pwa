@@ -13,9 +13,9 @@ export function BalanceChart({ data }: { data: BalanceData[] }) {
     }
 
     return (
-        <div className="h-[300px] w-full">
+        <div className="h-[300px] min-h-[300px] min-w-0 w-full">
             <h3 className="text-lg font-semibold mb-4 text-slate-900 dark:text-white">Evolução do Saldo</h3>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={300} initialDimension={{ width: 1, height: 300 }}>
                 <LineChart
                     data={data}
                     margin={{

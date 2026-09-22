@@ -125,7 +125,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-2 hover:bg-white/5 rounded-full transition-colors text-brand-gray hover:text-white"
+                        className="flex min-h-11 min-w-11 items-center justify-center p-2 hover:bg-white/5 rounded-full transition-colors text-brand-gray hover:text-white"
                     >
                         <X className="w-6 h-6" />
                     </button>
@@ -149,7 +149,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                             inputMode="numeric"
                             required
                             placeholder="R$ 0,00"
-                            className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-4xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter"
+                            className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-3xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-4xl"
                             value={formData.amount}
                             onChange={handleAmountChange}
                             autoFocus
@@ -219,7 +219,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                            className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
                         >
                             {loading ? (
                                 <Loader2 className="animate-spin w-5 h-5" />
@@ -235,7 +235,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-white/5 text-brand-gray rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/10 hover:text-white transition-all border border-white/5"
+                            className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-white/5 text-brand-gray rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/10 hover:text-white transition-all border border-white/5"
                         >
                             <X className="w-4 h-4" />
                             <span>Cancelar</span>

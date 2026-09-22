@@ -43,7 +43,7 @@ export function TypeSelector({ selectedType, onChange }: TypeSelectorProps) {
             <button
                 type="button"
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full pl-5 pr-12 py-3.5 bg-brand-deep-sea border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white outline-none focus:border-brand-accent/50 transition-all cursor-pointer shadow-xl flex items-center justify-between text-left h-[52px]"
+                className="min-h-[52px] w-full pl-5 pr-12 py-3.5 bg-brand-deep-sea border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white outline-none focus:border-brand-accent/50 transition-all cursor-pointer shadow-xl flex items-center justify-between text-left"
             >
                 <div className="flex items-center gap-3 overflow-hidden">
                     <Filter className="w-4 h-4 text-brand-accent shrink-0 opacity-50" />
@@ -63,7 +63,7 @@ export function TypeSelector({ selectedType, onChange }: TypeSelectorProps) {
                                     onChange(option.id as TransactionType)
                                     setIsOpen(false)
                                 }}
-                                className="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
+                                className="min-h-11 w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/5 transition-colors group text-left"
                             >
                                 <div className="flex items-center gap-3">
                                     <option.icon className={`w-4 h-4 ${option.color || 'text-brand-accent'} opacity-70`} />

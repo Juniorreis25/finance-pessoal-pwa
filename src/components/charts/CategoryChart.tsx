@@ -27,8 +27,8 @@ export function CategoryChart({ data }: { data: CategoryData[] }) {
     ]
 
     return (
-        <div className="h-[300px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
+        <div className="h-[300px] min-h-[300px] min-w-0 w-full">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={300} initialDimension={{ width: 1, height: 300 }}>
                 <PieChart>
                     <Pie
                         data={data}

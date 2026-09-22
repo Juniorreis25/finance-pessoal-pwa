@@ -40,20 +40,20 @@ export default function CardsPage() {
     }, [fetchCards])
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-extrabold text-white tracking-tighter uppercase">Meus <span className="text-brand-accent">Cartões</span></h1>
                     <p className="text-brand-gray text-xs font-bold uppercase tracking-widest opacity-60">Gerenciamento de Crédito</p>
                 </div>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
                     <StatusSelector
                         selectedStatus={selectedStatus}
                         onChange={setSelectedStatus}
                     />
                     <Link
                         href="/cards/new"
-                        className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_4px_15px_rgba(0,240,255,0.3)]"
+                        className="flex min-h-12 min-w-12 items-center justify-center self-end bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_4px_15px_rgba(0,240,255,0.3)] sm:self-auto"
                     >
                         <Plus className="w-6 h-6" strokeWidth={3} />
                     </Link>

@@ -338,11 +338,11 @@ export default function DashboardPage() {
     }, [supabase])
 
     return (
-        <div className="space-y-8 pb-10">
+        <div className="space-y-6 pb-10 sm:space-y-8">
             {/* Header with Asymmetry */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
                 <div>
-                    <h1 className="text-4xl font-extrabold tracking-tighter text-white">
+                    <h1 className="text-3xl font-extrabold tracking-tighter text-white sm:text-4xl">
                         Visão <span className="text-brand-500">Geral</span>
                     </h1>
                     {userProfile.display_name || userProfile.welcome_message ? (
@@ -357,20 +357,20 @@ export default function DashboardPage() {
                     )}
                 </div>
 
-                <div className="flex flex-col md:flex-row gap-4 items-end">
+                <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-end md:gap-4">
                     <CategorySelector selectedCategory={selectedCategory} onCategoryChange={setSelectedCategory} />
                     <MonthSelector currentDate={currentDate} onDateChange={setCurrentDate} />
 
-                    <div className="flex gap-2">
-                        <Link href="/transactions" className="p-3 bg-brand-deep-sea text-brand-gray rounded-2xl border border-white/5 hover:bg-white/5 transition-all cursor-pointer" aria-label="Ver transações" title="Ver Histórico de Transações">
+                    <div className="flex gap-2 self-end">
+                        <Link href="/transactions" className="flex min-h-11 min-w-11 items-center justify-center p-3 bg-brand-deep-sea text-brand-gray rounded-2xl border border-white/5 hover:bg-white/5 transition-all cursor-pointer" aria-label="Ver transações" title="Ver Histórico de Transações">
                             <BarChart3 className="w-5 h-5" />
                         </Link>
-                        <Link href="/cards" className="p-3 bg-brand-deep-sea text-brand-gray rounded-2xl border border-white/5 hover:bg-white/5 transition-all cursor-pointer" aria-label="Ver cartões" title="Gerenciar Meus Cartões">
+                        <Link href="/cards" className="flex min-h-11 min-w-11 items-center justify-center p-3 bg-brand-deep-sea text-brand-gray rounded-2xl border border-white/5 hover:bg-white/5 transition-all cursor-pointer" aria-label="Ver cartões" title="Gerenciar Meus Cartões">
                             <CreditCard className="w-5 h-5" />
                         </Link>
                         <Link
                             href="/transactions/new"
-                            className="flex items-center justify-center w-[52px] h-[52px] bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer"
+                            className="flex min-h-[52px] min-w-[52px] items-center justify-center bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer"
                             title="Nova Transação"
                         >
                             <Plus className="w-6 h-6" strokeWidth={3} />
@@ -389,12 +389,12 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
                         {/* Master Summary Card - Analytical View */}
-                        <div className="md:col-span-12 relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2.5rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                        <div className="md:col-span-12 relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                             {/* Background decorative elements */}
                             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                             <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-success/5 blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-                            <div className="relative flex flex-col lg:flex-row gap-12 items-stretch">
+                            <div className="relative flex flex-col gap-8 lg:flex-row lg:gap-12 items-stretch">
                                 {/* Left Side: Balance & Income */}
                                 <div className="flex-1 space-y-8">
                                     <div className="flex justify-between items-start">
@@ -404,7 +404,7 @@ export default function DashboardPage() {
                                         </div>
                                         <button
                                             onClick={toggleVisibility}
-                                            className="p-2 text-slate-500 hover:text-white transition-colors cursor-pointer"
+                                            className="flex min-h-11 min-w-11 items-center justify-center p-2 text-slate-500 hover:text-white transition-colors cursor-pointer"
                                             aria-label={isValuesVisible ? "Ocultar valores" : "Mostrar valores"}
                                         >
                                             {isValuesVisible ? (
@@ -416,7 +416,7 @@ export default function DashboardPage() {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <h2 className={`text-5xl md:text-6xl font-black tracking-tighter transition-all duration-500 ${stats.balance >= 0 ? 'text-brand-accent drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]' : 'text-rose-500'
+                                        <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter transition-all duration-500 ${stats.balance >= 0 ? 'text-brand-accent drop-shadow-[0_0_15px_rgba(0,240,255,0.3)]' : 'text-rose-500'
                                             }`}>
                                             <MaskedValue value={stats.balance} prefix={isValuesVisible ? "R$ " : ""} />
                                         </h2>
@@ -436,7 +436,7 @@ export default function DashboardPage() {
                                 </div>
 
                                 {/* Middle: Breakdown List */}
-                                <div className="w-full lg:w-64 flex flex-col justify-center space-y-4 py-6 px-8 border-y lg:border-y-0 lg:border-x border-white/5">
+                                <div className="w-full lg:w-64 flex flex-col justify-center space-y-4 border-y border-white/5 py-5 px-4 sm:px-8 lg:border-y-0 lg:border-x">
                                     <div className="flex justify-between items-center group">
                                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest group-hover:text-brand-accent transition-colors">Recorr.</span>
                                         <span className="text-sm font-bold text-white">
@@ -499,14 +499,14 @@ export default function DashboardPage() {
 
                     {/* Charts Section - Row 1 */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <section className="bg-brand-deep-sea rounded-[2.5rem] p-8 border border-white/5 shadow-xl">
+                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-lg font-semibold text-white">Análise Anual</h3>
                                 <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Fluxo de Caixa</div>
                             </div>
                             <OverviewChart data={overviewData} />
                         </section>
-                        <section className="bg-brand-deep-sea rounded-[2.5rem] p-8 border border-white/5 shadow-xl">
+                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-lg font-semibold text-white">Distribuição por Categoria</h3>
                                 <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Top Categorias</div>
@@ -517,14 +517,14 @@ export default function DashboardPage() {
 
                     {/* Charts Section - Row 2 */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <section className="bg-brand-deep-sea rounded-[2.5rem] p-8 border border-white/5 shadow-xl">
+                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-lg font-semibold text-white">Recorrentes vs Cartões</h3>
                                 <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Controle de Peso</div>
                             </div>
                             <FixedVsCardChart data={fixedVsCardData} />
                         </section>
-                        <section className="bg-brand-deep-sea rounded-[2.5rem] p-8 border border-white/5 shadow-xl">
+                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-lg font-semibold text-white">Gasto por Cartão</h3>
                                 <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Faturas do Mês</div>

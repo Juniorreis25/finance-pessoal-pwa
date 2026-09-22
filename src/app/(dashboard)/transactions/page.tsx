@@ -258,14 +258,14 @@ export default function TransactionsPage() {
 
 
     return (
-        <div className="space-y-8 max-w-5xl mx-auto pb-20">
+        <div className="space-y-6 max-w-5xl mx-auto pb-10 sm:space-y-8 sm:pb-20">
             {isLocalDemoMode && (
                 <div className="rounded-2xl border border-amber-400/30 bg-amber-400/10 px-5 py-3 text-xs font-bold text-amber-200">
                     Modo demonstracao local: os dados exibidos sao simulados e nenhuma alteracao sera enviada ao banco.
                 </div>
             )}
             {/* Header with Title and Global Action */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
                     <h1 className="text-3xl font-bold text-white tracking-tight">Transações</h1>
                     <p className="text-slate-400">Gerencie suas entradas e saídas.</p>
@@ -273,7 +273,7 @@ export default function TransactionsPage() {
 
                 <Link
                     href="/transactions/new"
-                    className="flex items-center justify-center w-[52px] h-[52px] bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer"
+                    className="flex min-h-[52px] min-w-[52px] items-center justify-center self-end bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer sm:self-auto"
                     title="Nova Transação"
                 >
                     <Plus className="w-6 h-6" strokeWidth={3} />
@@ -334,13 +334,13 @@ export default function TransactionsPage() {
             </div>
 
             {/* Master Summary Card - Expense Focus */}
-            <div className="relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2.5rem] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                 {/* Background decorative elements */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-success/5 blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
                 <div className="relative space-y-8">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+                    <div className="flex flex-col items-start justify-between gap-6 sm:gap-8 md:flex-row md:items-center">
                         {/* Left Side: Total (Cartão + Dinheiro) */}
                         <div className="flex-1 space-y-4">
                             <div className="flex items-center gap-3">
@@ -350,7 +350,7 @@ export default function TransactionsPage() {
                                 </div>
                                 <button
                                     onClick={toggleVisibility}
-                                    className="p-2 text-slate-500 hover:text-white transition-colors cursor-pointer"
+                                    className="flex min-h-11 min-w-11 items-center justify-center p-2 text-slate-500 hover:text-white transition-colors cursor-pointer"
                                     aria-label={isValuesVisible ? "Ocultar valores" : "Mostrar valores"}
                                 >
                                     {isValuesVisible ? (
@@ -361,7 +361,7 @@ export default function TransactionsPage() {
                                 </button>
                             </div>
 
-                            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-rose-500 drop-shadow-[0_0_10px_rgba(244,63,94,0.1)]">
+                            <h2 className="text-3xl font-black tracking-tighter text-rose-500 drop-shadow-[0_0_10px_rgba(244,63,94,0.1)] sm:text-4xl md:text-5xl">
                                 <MaskedValue value={pointualTotal} prefix={isValuesVisible ? "- R$ " : ""} />
                             </h2>
                         </div>
@@ -400,7 +400,7 @@ export default function TransactionsPage() {
                     <div className="h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
 
                     {/* Cash Flow Summary */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white/[0.02] border border-white/5 rounded-3xl p-6">
+                    <div className="grid grid-cols-1 gap-4 bg-white/[0.02] border border-white/5 rounded-3xl p-4 sm:grid-cols-3 sm:gap-6 sm:p-6">
                         <div className="space-y-1">
                             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                                 <ArrowUpRight className="w-3 h-3 text-brand-success" />
@@ -538,10 +538,10 @@ export default function TransactionsPage() {
                                         </Link>
                                     ) : (
                                         <div className="flex gap-0.5 sm:gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all lg:translate-x-2 lg:group-hover:translate-x-0">
-                                            <Link href={`/transactions/${tx.id}/edit`} className="p-2 text-brand-gray hover:text-brand-accent hover:bg-white/5 rounded-xl transition-all" title="Editar">
+                                            <Link href={`/transactions/${tx.id}/edit`} className="flex min-h-11 min-w-11 items-center justify-center p-2 text-brand-gray hover:text-brand-accent hover:bg-white/5 rounded-xl transition-all" title="Editar">
                                                 <Edit2 className="w-4 h-4" />
                                             </Link>
-                                            <button onClick={() => handleDelete(tx.id)} className="p-2 text-brand-gray hover:text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer" title="Excluir">
+                                            <button onClick={() => handleDelete(tx.id)} className="flex min-h-11 min-w-11 items-center justify-center p-2 text-brand-gray hover:text-white hover:bg-white/10 rounded-xl transition-all cursor-pointer" title="Excluir">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
