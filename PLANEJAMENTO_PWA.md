@@ -5,7 +5,7 @@
 ## 1. Estado atual
 
 **Atualizado em:** 2026-09-22  
-**Status geral:** P0, P1 e P2 concluídas; P3 em validação; P4, P6 e P7 iniciadas; validação real de RLS/Storage depende do ambiente Supabase/domínio.  
+**Status geral:** P0, P1 e P2 concluídas; P3 parcialmente validada no Supabase; P4, P6 e P7 iniciadas; confirmação por duas contas e domínio ainda pendentes.
 **Próxima frente:** concluir a validação de P3 e continuar a adaptação mobile da P4.
 
 ### Frentes concluídas
@@ -305,6 +305,15 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - 17 arquivos e 62 testes aprovados.
 - Typecheck e build aprovados com placeholders públicos.
 
+#### Validação remota somente leitura
+
+- Projeto confirmado: `finance_pessoal_v2` (`giuaayoosrujxtlgdift`).
+- Projeto `ACTIVE_HEALTHY`, região `us-east-2`.
+- Migrations de segurança `secure_rls_storage_and_rpc` e `secure_avatar_storage` presentes.
+- Tabelas financeiras (`cards`, `transactions`, `categories`, `recurring_expenses`, `user_profiles`) com RLS habilitado.
+- `storage.buckets` e `storage.objects` com RLS habilitado.
+- Nenhum dado de negócio foi lido ou alterado durante essa inspeção.
+
 #### Pendências externas
 
 - Definir o domínio oficial do PWA.
@@ -312,6 +321,8 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Testar cadastro e confirmação de e-mail com conta de teste.
 - Testar sessão expirada, logout, troca de usuário e renovação.
 - Confirmar RLS e Storage com duas contas reais, sem alterar policies ou migrations.
+- Avaliar no painel do Supabase a ativação da proteção contra senhas vazadas, apontada pelo advisor de segurança.
+- Avaliar posteriormente os três índices de chaves estrangeiras apontados pelo advisor de performance, sem aplicar alteração neste MVP.
 
 ### P4 — UX específica para iPhone
 
@@ -448,9 +459,11 @@ Sem aparelho real, os testes acima devem ser registrados como pendentes; auditor
 - Servidor local iniciado em `http://localhost:3101`.
 - `/manifest.webmanifest`, `/sw.js`, `/offline.html` e ícone 192x192 responderam HTTP 200.
 - Manifesto servido com `display: standalone` e `start_url: /dashboard`.
-- `/api/health` respondeu `503 unavailable` somente porque foram usados placeholders públicos, sem conexão Supabase real.
-- `git remote -v` não aponta para nenhum repositório remoto.
-- Não existe `.vercel/project.json` nem `.env` no projeto.
+- `/api/health` respondeu `200 {"status":"ok"}` com as credenciais públicas reais do projeto.
+- `git remote -v` aponta somente para o repositório independente `finance-pessoal-pwa`.
+- Não existe `.vercel/project.json`; `.env.local` existe apenas localmente e está ignorado pelo Git.
+
+> A chave pública foi gravada apenas no `.env.local`, que está ignorado pelo Git. Nenhuma chave secreta foi armazenada ou enviada ao repositório.
 
 Ainda pendentes nesta frente: executar health check com variáveis reais de ambiente controlado e finalizar a conferência antes do primeiro commit local.
 

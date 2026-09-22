@@ -9,9 +9,16 @@ Este plano organiza o histórico para facilitar revisão, auditoria, rollback e 
 - Não misturar refatoração, correção visual e nova funcionalidade no mesmo commit.
 - Cada commit deve passar pelos testes aplicáveis antes de ser criado.
 - Não incluir `.env`, tokens, `service_role`, `.vercel`, `.next` ou `node_modules`.
-- Não fazer push ou deploy automaticamente.
+- Não fazer push ou deploy sem autorização explícita.
 - A branch inicial deve permanecer sem remote até o novo repositório GitHub ser confirmado.
 - Commits devem ser criados somente após validação local e autorização explícita.
+
+## Estado de execução
+
+- Repositório independente confirmado: `https://github.com/Juniorreis25/finance-pessoal-pwa.git`.
+- Primeiro commit publicado em `main`: `6336c03` (`chore: initialize independent finance pessoal pwa`).
+- O primeiro commit consolidou o baseline, a documentação, a implementação PWA, a adaptação mobile e os testes que estavam preparados antes da publicação.
+- A partir do próximo commit, seguir a separação C08–C11 e manter cada intenção técnica isolada.
 
 ## Ordem planejada
 
@@ -239,13 +246,12 @@ docs: record validation results and remaining limitations
 
 ## Como separar o estado atual
 
-Como o repositório ainda não possui commits, a separação inicial deve ser feita nesta ordem:
+Como o primeiro commit já consolidou a preparação inicial, a sequência daqui em diante deve ser:
 
-1. Criar C01 com o baseline da aplicação.
-2. Criar C02 com os documentos de origem e planejamento.
-3. Criar C03–C07 somente após separar os arquivos já modificados por frente.
-4. Criar C08–C10 junto com os testes correspondentes.
-5. Criar C11 após a validação local completa.
+1. Criar C08 com a validação de autenticação e domínio.
+2. Criar C09 com exportações e avatar.
+3. Criar C10 com a cobertura automatizada restante do PWA.
+4. Criar C11 após a validação local, Supabase e domínio.
 
 Antes de cada commit, conferir:
 
