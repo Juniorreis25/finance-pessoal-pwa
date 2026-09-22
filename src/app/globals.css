@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-accent: var(--brand-accent);
+  --color-brand-success: var(--brand-success);
+  --color-brand-gray: var(--brand-gray);
+  --color-brand-deep-sea: var(--brand-deep-sea);
+  --color-brand-nav: var(--brand-nav);
+
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-ibm-mono);
+}
+
+:root {
+  /* Neo-Dark Hybrid Banking System */
+  --background: #0A0A0A;
+  /* Matte Charcoal */
+  --foreground: #FFFFFF;
+
+  --brand-accent: #00F0FF;
+  /* Neon Cyan */
+  --brand-success: #00FF94;
+  /* Emerald Green */
+  --brand-gray: #8E8E93;
+  /* iOS Gray */
+  --brand-deep-sea: #141C24;
+  /* Deep Sea Blue-Teal */
+  --brand-nav: #0D1117;
+  /* Bottom Nav Black */
+
+  --success: var(--brand-success);
+  --danger: #FFFFFF;
+  /* High contrast white for negatives, per instructions */
+}
+
+@layer utilities {
+  .glow-cyan {
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
+  }
+}
+
+/* Fix browser autofill background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0px 1000px #0D1117 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
