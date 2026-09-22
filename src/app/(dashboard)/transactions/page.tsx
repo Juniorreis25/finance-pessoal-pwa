@@ -3,7 +3,7 @@
 
 import { Fragment, useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
-import { Plus, ArrowDownRight, ArrowUpRight, ArrowRightLeft, Edit2, Trash2, Search, CreditCard, Wallet, CalendarRange, ListTree } from 'lucide-react'
+import { Plus, ArrowDownRight, ArrowUpRight, ArrowRightLeft, Edit2, Trash2, Search, CreditCard, Wallet, CalendarRange, ListTree, SlidersHorizontal } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { format, addMonths, subMonths, parseISO, startOfMonth } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -16,6 +16,8 @@ import { ExportMenu } from '@/components/ui/ExportMenu'
 import { isDateInCalendarMonth, isRecurringActiveForMonth } from '@/lib/date-logic'
 import { getLocalDemoRecurring, getLocalDemoTransactions, isLocalDemoMode } from '@/lib/local-demo'
 import { getRecurringOccurrenceDate } from '@/lib/recurring-logic'
+import { useIsMobile } from '@/hooks/useIsMobile'
+import { groupTransactionsByDay, MobileTransactionTimeline } from '@/components/transactions/MobileTransactionTimeline'
 
 type Transaction = {
     id: string
@@ -53,6 +55,7 @@ type Card = {
 }
 
 const TRANSACTIONS_PER_PAGE = 20
+const DAYS_PER_MOBILE_PAGE = 10
 
 export default function TransactionsPage() {
     const supabase = createClient()
@@ -66,6 +69,7 @@ export default function TransactionsPage() {
     const [selectedType, setSelectedType] = useState<'all' | 'income' | 'expense'>('all')
     const [currentPage, setCurrentPage] = useState(1)
     const { isValuesVisible, toggleVisibility } = usePrivacy()
+    const isMobile = useIsMobile(640)
 
     const fetchData = useCallback(async () => {
         setLoading(true)
@@ -218,12 +222,20 @@ export default function TransactionsPage() {
 
     const displayedTransactions = [...timelineTransactions, ...recurringOccurrences]
         .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id))
-    const totalPages = Math.max(1, Math.ceil(displayedTransactions.length / TRANSACTIONS_PER_PAGE))
+    const transactionDays = groupTransactionsByDay(displayedTransactions)
+    const totalPages = Math.max(1, Math.ceil(isMobile ? transactionDays.length / DAYS_PER_MOBILE_PAGE : displayedTransactions.length / TRANSACTIONS_PER_PAGE))
     const visiblePage = Math.min(currentPage, totalPages)
     const paginatedTransactions = displayedTransactions.slice(
         (visiblePage - 1) * TRANSACTIONS_PER_PAGE,
         visiblePage * TRANSACTIONS_PER_PAGE
     )
+    const visibleDays = transactionDays.slice(
+        (visiblePage - 1) * DAYS_PER_MOBILE_PAGE,
+        visiblePage * DAYS_PER_MOBILE_PAGE
+    )
+    const visibleMobileCount = visibleDays.reduce((count, day) => count + day.transactions.length, 0)
+    const mobileCountBeforePage = transactionDays.slice(0, (visiblePage - 1) * DAYS_PER_MOBILE_PAGE)
+        .reduce((count, day) => count + day.transactions.length, 0)
     const focusedMonthKey = format(currentDate, 'yyyy-MM')
     const previousMonthKey = format(previousMonthDate, 'yyyy-MM')
     const hasFocusedMonthTransactions = displayedTransactions.some(tx => tx.date.startsWith(focusedMonthKey))
@@ -270,32 +282,57 @@ export default function TransactionsPage() {
 
 
     return (
-        <div className="space-y-6 max-w-5xl mx-auto pb-10 sm:space-y-8 sm:pb-20">
+        <div className="space-y-4 max-w-5xl mx-auto pb-10 sm:space-y-8 sm:pb-20">
             {isLocalDemoMode && (
                 <div className="rounded-2xl border border-amber-400/30 bg-amber-400/10 px-5 py-3 text-xs font-bold text-amber-200">
                     Modo demonstracao local: os dados exibidos sao simulados e nenhuma alteracao sera enviada ao banco.
                 </div>
             )}
             {/* Header with Title and Global Action */}
-            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="flex items-center justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Transações</h1>
-                    <p className="text-slate-400">Gerencie suas entradas e saídas.</p>
+                    <h1 className="text-2xl font-bold text-white tracking-tight sm:text-3xl">Transações</h1>
+                    <p className="hidden text-slate-400 sm:block">Gerencie suas entradas e saídas.</p>
                 </div>
 
                 <Link
                     href="/transactions/new"
-                    className="flex min-h-[52px] min-w-[52px] items-center justify-center self-end bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer sm:self-auto"
+                    className="flex min-h-11 min-w-11 items-center justify-center bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer sm:min-h-[52px] sm:min-w-[52px]"
                     title="Nova Transação"
                 >
                     <Plus className="w-6 h-6" strokeWidth={3} />
                 </Link>
             </div>
 
+            <div className="rounded-2xl border border-white/5 bg-brand-deep-sea px-4 py-3 sm:hidden">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                        <p className="truncate text-xs text-slate-400">Saldo projetado · {format(currentDate, 'MMMM', { locale: ptBR })}</p>
+                        <p className={`truncate text-xl font-bold ${projectedBalance >= 0 ? 'text-white' : 'text-rose-400'}`}>
+                            <MaskedValue value={Math.abs(projectedBalance)} prefix={isValuesVisible ? (projectedBalance >= 0 ? 'R$ ' : '− R$ ') : ''} />
+                        </p>
+                    </div>
+                    <button type="button" onClick={toggleVisibility} className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-brand-accent" aria-label={isValuesVisible ? 'Ocultar valores' : 'Mostrar valores'}>
+                        {isValuesVisible ? 'Ocultar' : 'Mostrar'}
+                    </button>
+                </div>
+            </div>
+
+            <div className="flex items-center justify-between gap-1 rounded-2xl bg-brand-deep-sea p-1 sm:hidden" aria-label="Navegação por mês">
+                {[-2, -1, 0, 1, 2].map(offset => {
+                    const month = addMonths(currentDate, offset)
+                    return (
+                        <button key={offset} type="button" onClick={() => { setCurrentDate(month); setCurrentPage(1) }} aria-label={`Selecionar ${format(month, 'MMMM yyyy', { locale: ptBR })}`} aria-current={offset === 0 ? 'date' : undefined} className={`min-h-11 flex-1 rounded-xl px-1 text-xs font-bold capitalize ${offset === 0 ? 'bg-brand-accent text-black' : 'text-slate-300'}`}>
+                            {format(month, 'MMM', { locale: ptBR })}
+                        </button>
+                    )
+                })}
+            </div>
+
             {/* Unified Toolbar: Professional Distribution */}
-            <div className="flex flex-col lg:flex-row gap-3 items-center w-full">
+            <div className="flex flex-row flex-wrap gap-3 items-center w-full lg:flex-nowrap">
                 {/* 1. Date Navigation */}
-                <div className="w-full lg:w-auto">
+                <div className="hidden w-full sm:block lg:w-auto">
                     <MonthSelector
                         currentDate={currentDate}
                         onDateChange={(date) => {
@@ -306,7 +343,7 @@ export default function TransactionsPage() {
                 </div>
 
                 {/* 2. Flexible Search Bar (Fills remaining center space) */}
-                <div className="relative flex-1 w-full lg:min-w-[200px]">
+                <div className="relative min-w-0 flex-1 basis-[calc(100%-4rem)] sm:basis-auto lg:min-w-[200px]">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-gray" />
                     <label htmlFor="search-transactions" className="sr-only">Buscar transações</label>
                     <input
@@ -322,7 +359,7 @@ export default function TransactionsPage() {
                 </div>
 
                 {/* 3. Dropdown Filters Group */}
-                <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <div className="hidden flex-col gap-3 w-full sm:flex sm:flex-row lg:w-auto">
                     <TypeSelector
                         selectedType={selectedType}
                         onChange={(type) => {
@@ -343,13 +380,20 @@ export default function TransactionsPage() {
                         currentDate={currentDate}
                     />
                 </div>
+                <details className="relative w-[52px] shrink-0 rounded-2xl border border-white/5 bg-brand-deep-sea sm:hidden">
+                    <summary className="flex min-h-[52px] list-none items-center justify-center text-brand-accent [&::-webkit-details-marker]:hidden" aria-label={hasActiveFilters ? 'Filtros ativos' : 'Filtros'}><SlidersHorizontal className="h-5 w-5" /><span className="sr-only">Filtros</span></summary>
+                    <div className="absolute right-0 z-30 mt-2 w-[min(300px,calc(100vw-2rem))] space-y-3 rounded-2xl border border-white/10 bg-brand-deep-sea p-3 shadow-2xl">
+                        <TypeSelector selectedType={selectedType} onChange={(type) => { setSelectedType(type); setCurrentPage(1) }} />
+                        <MethodSelector cards={cards} selectedIds={selectedCardIds} onChange={(ids) => { setSelectedCardIds(ids); setCurrentPage(1) }} />
+                    </div>
+                </details>
             </div>
 
-            <h2 className="text-sm font-semibold text-slate-300" id="focused-month-summary">
+            <h2 className="hidden text-sm font-semibold text-slate-300 sm:block" id="focused-month-summary">
                 Resumo de {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
             </h2>
             {/* Master Summary Card - Expense Focus */}
-            <div className="relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="relative hidden overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:block sm:rounded-[2.5rem] sm:p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                 {/* Background decorative elements */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-success/5 blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
@@ -450,8 +494,8 @@ export default function TransactionsPage() {
 
             {/* Transaction timeline */}
             <section className="space-y-4" aria-labelledby="transaction-timeline-title">
-                <h2 className="text-lg font-bold text-white" id="transaction-timeline-title">Linha do tempo</h2>
-                <p className="text-xs text-slate-400">{format(currentDate, 'MMMM yyyy', { locale: ptBR })} e {format(previousMonthDate, 'MMMM yyyy', { locale: ptBR })}</p>
+                <h2 className="hidden text-lg font-bold text-white sm:block" id="transaction-timeline-title">Linha do tempo</h2>
+                <p className="hidden text-xs text-slate-400 sm:block">{format(currentDate, 'MMMM yyyy', { locale: ptBR })} e {format(previousMonthDate, 'MMMM yyyy', { locale: ptBR })}</p>
                 {loading ? (
                     <div className="p-12 text-center text-slate-500 flex justify-center">
                         <div className="animate-pulse flex flex-col gap-2">
@@ -460,6 +504,13 @@ export default function TransactionsPage() {
                     </div>
                 ) : displayedTransactions.length > 0 ? (
                     <>
+                    {isMobile && <MobileTransactionTimeline
+                        days={visibleDays}
+                        previousMonthHasTransactions={hasPreviousMonthTransactions}
+                        previousMonthDate={previousMonthDate}
+                        isLastPage={visiblePage === totalPages}
+                    />}
+                    {!isMobile && <div className="space-y-4">
                     {visiblePage === 1 && !hasFocusedMonthTransactions && (
                         <div>
                             <h3 className="flex items-center gap-3 pt-2 text-sm font-bold text-slate-200">
@@ -594,6 +645,7 @@ export default function TransactionsPage() {
                             <p className="pt-3 text-sm text-slate-400">Nenhum lançamento neste mês para os filtros atuais.</p>
                         </div>
                     )}
+                    </div>}
                     </>
                 ) : (
                     <div className="p-16 text-center flex flex-col items-center bg-slate-900 rounded-3xl border border-slate-800 border-dashed">
@@ -622,7 +674,7 @@ export default function TransactionsPage() {
                 {!loading && displayedTransactions.length > 0 && (
                     <nav className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2" aria-label="Paginação de transações">
                         <p className="text-xs text-slate-400" aria-live="polite">
-                            Exibindo {(visiblePage - 1) * TRANSACTIONS_PER_PAGE + 1}–{Math.min(visiblePage * TRANSACTIONS_PER_PAGE, displayedTransactions.length)} de {displayedTransactions.length}
+                            Exibindo {isMobile ? mobileCountBeforePage + 1 : (visiblePage - 1) * TRANSACTIONS_PER_PAGE + 1}–{isMobile ? mobileCountBeforePage + visibleMobileCount : Math.min(visiblePage * TRANSACTIONS_PER_PAGE, displayedTransactions.length)} de {displayedTransactions.length}
                         </p>
                         <div className="flex items-center gap-3">
                             <button

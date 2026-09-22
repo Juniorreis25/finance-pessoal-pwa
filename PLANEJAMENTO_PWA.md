@@ -6,7 +6,7 @@
 
 **Atualizado em:** 2026-09-22  
 **Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento. P5 foi explicitamente adiada.
-**Próxima frente:** tornar os fluxos essenciais funcionais, estáveis e compatíveis com o uso diário no iPhone; exportações e avatar ficam fora da prioridade do MVP atual.
+**Próxima frente:** acompanhar a linha do tempo agrupada por dia após publicação e confirmar o comportamento no iPhone real. Exportações e avatar ficam fora da prioridade do MVP atual.
 
 ### Frentes concluídas
 
@@ -25,6 +25,7 @@
 - [x] P7 concluída: servidor local, endpoints PWA, ambiente Supabase real e validação manual preliminar verificados.
 - [x] P8 concluída: projeto Vercel independente, variáveis públicas, Redirect URL, deployment e testes manuais de produção validados.
 - [x] Plano de commits criado em `PLANO_DE_COMMITS.md`.
+- [x] Linha do tempo mobile por dia: implementação e testes locais concluídos em 2026-09-22; usuário aprovou a versão local e autorizou commit e deploy.
 
 ### Frentes pendentes
 
@@ -598,6 +599,18 @@ Ao concluir qualquer frente:
 | 2026-09-22 | Executar push/deploy após autorização explícita | Usuário autorizou a publicação do PWA independente | Deployment de produção validado; autenticação ainda precisa de teste no domínio |
 | 2026-09-22 | Priorizar funcionalidade e compatibilidade mobile no iPhone | Uso familiar depende primeiro de fluxos essenciais estáveis no dispositivo | Exportações e avatar foram adiados para depois do MVP mobile |
 | 2026-09-22 | Exibir dois meses na linha do tempo de Transações | Facilita identificar o corte do mês sem trocar de tela | Resumo e exportação continuam restritos ao mês em foco; commit `3bd0f65` e deployment de produção `dpl_3u3os68hRAdeSca7GPF9GFYwrKdb` publicados |
+| 2026-09-22 | Agrupar transações por dia em um único balão no mobile, mantendo cartões no desktop | Reduz rolagem e melhora a leitura do extrato no iPhone | Paginação mobile por dias inteiros; cabeçalho mensal preservado; não exibir saldo diário sem dados para calculá-lo; validação local antes de commit/deploy |
+
+### Validação local da linha do tempo mobile
+
+- Esboço aprovado pelo usuário e implementado na rota `/transactions` para telas abaixo de 640 px.
+- Cabeçalho do mês, data e balão único para todos os lançamentos do dia; lançamentos recorrentes continuam marcados como previstos e levam à gestão de recorrências.
+- Seletor de mês em chips, resumo compacto e busca/filtros funcionais no mobile; layout desktop anterior preservado.
+- Paginação mobile por até 10 dias, sem separar lançamentos da mesma data entre páginas.
+- `npm test -- --reporter=dot`: 76 testes aprovados, incluindo agrupamento e paginação mobile.
+- `npx tsc --noEmit`: aprovado. `npm run build`: aprovado. `npm run lint`: 0 erros; 19 avisos preexistentes fora dos arquivos desta frente.
+- Navegador local em 390 px: lista carregou com dados reais, agrupamento, busca e troca de mês verificados; sem erros de console observados. Comparação visual registrada em `design-qa.md`.
+- Usuário validou a tela no navegador local renderizado em 390 × 844 px e autorizou commit e deploy. A checagem no iPhone real continua recomendada após a publicação.
 
 ## 12. Evidências e referências
 

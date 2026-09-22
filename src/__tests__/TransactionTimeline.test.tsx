@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import '@testing-library/jest-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import TransactionsPage from '../app/(dashboard)/transactions/page'
@@ -84,7 +84,10 @@ function transaction(id: string, date: string, amount = 50) {
 }
 
 describe('linha do tempo de transações', () => {
+    const desktopWidth = window.innerWidth
+
     beforeEach(() => {
+        Object.defineProperty(window, 'innerWidth', { configurable: true, value: desktopWidth })
         vi.useFakeTimers({ toFake: ['Date'] })
         vi.setSystemTime(new Date(2026, 8, 22, 12))
         state.demoMode = true
@@ -165,5 +168,37 @@ describe('linha do tempo de transações', () => {
 
         expect(await screen.findByRole('heading', { name: 'Sem lançamentos nestes dois meses' })).toBeInTheDocument()
         expect(screen.queryByRole('button', { name: 'Limpar Filtros' })).not.toBeInTheDocument()
+    })
+
+    it('agrupa todas as transações do mesmo dia em um balão mobile com acesso ao detalhe', async () => {
+        Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 })
+        state.transactions = [
+            transaction('mercado', '2026-09-22'),
+            transaction('farmacia', '2026-09-22'),
+            transaction('anterior', '2026-08-30'),
+        ]
+        render(<TransactionsPage />)
+
+        const timeline = await screen.findByTestId('mobile-transaction-timeline')
+        const day = within(timeline).getByLabelText('Transações de 22 de setembro')
+        expect(within(day).getByText('Lançamento mercado')).toBeInTheDocument()
+        expect(within(day).getByText('Lançamento farmacia')).toBeInTheDocument()
+        expect(within(day).getAllByRole('link')).toHaveLength(2)
+        expect(within(day).getByRole('link', { name: /Lançamento mercado/ })).toHaveAttribute('href', '/transactions/mercado/edit')
+        expect(within(timeline).getByRole('heading', { name: 'agosto 2026', level: 3 })).toBeInTheDocument()
+    })
+
+    it('pagina por dias no mobile sem dividir um balão', async () => {
+        Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 })
+        state.transactions = Array.from({ length: 22 }, (_, index) => transaction(`mesmo-dia-${index}`, '2026-09-22'))
+        state.transactions.push(...Array.from({ length: 10 }, (_, index) => transaction(`outro-dia-${index}`, `2026-09-${String(21 - index).padStart(2, '0')}`)))
+        render(<TransactionsPage />)
+
+        const timeline = await screen.findByTestId('mobile-transaction-timeline')
+        expect(within(timeline).getByLabelText('Transações de 22 de setembro').querySelectorAll('a')).toHaveLength(22)
+        expect(screen.getByText('Página 1 de 2')).toBeInTheDocument()
+        fireEvent.click(screen.getByRole('button', { name: 'Próxima' }))
+        expect(within(timeline).queryByLabelText('Transações de 22 de setembro')).not.toBeInTheDocument()
+        expect(within(timeline).getByLabelText('Transações de 12 de setembro')).toBeInTheDocument()
     })
 })
