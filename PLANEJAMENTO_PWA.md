@@ -5,7 +5,7 @@
 ## 1. Estado atual
 
 **Atualizado em:** 2026-09-22  
-**Status geral:** P0, P1 e P2 concluídas; P3 avançada com Redirect URLs configuradas; P4, P6 e P7 iniciadas; confirmação por duas contas e domínio de produção ainda pendentes.
+**Status geral:** P0, P1, P2 e P7 concluídas; P3 validada em nível de API e teste manual preliminar; P4 e P6 ainda em andamento; iPhone real e domínio de produção pendentes.
 **Próxima frente:** concluir a validação de P3 e continuar a adaptação mobile da P4.
 
 ### Frentes concluídas
@@ -22,7 +22,7 @@
 - [ ] P3 em andamento: contrato de callback de autenticação centralizado e cobertura automatizada ampliada; RLS/Storage reais ainda dependem de ambiente e contas de teste.
 - [ ] P4 em andamento: navegação inferior, safe areas e viewport dinâmica ajustados.
 - [ ] P6 em andamento: testes automatizados do manifesto, ícones e regras de cache adicionados.
-- [ ] P7 em andamento: servidor local e endpoints PWA verificados com placeholders públicos.
+- [x] P7 concluída: servidor local, endpoints PWA, ambiente Supabase real e validação manual preliminar verificados.
 - [x] Plano de commits criado em `PLANO_DE_COMMITS.md`.
 
 ### Frentes pendentes
@@ -310,6 +310,7 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Listagem autenticada do bucket `avatars` não expôs caminhos de outro usuário.
 - Token inválido foi rejeitado com HTTP 403.
 - Rotas protegidas sem sessão redirecionaram para `/login` com HTTP 307.
+- Testes manuais realizados pelo usuário aparentam estar funcionando sem erro bloqueante relatado.
 - 18 arquivos e 68 testes aprovados.
 - Typecheck e build aprovados com placeholders públicos.
 
@@ -445,7 +446,7 @@ Sem aparelho real, os testes acima devem ser registrados como pendentes; auditor
 
 ### P7 — Validação local e entrega preparada
 
-**Status:** em andamento; validação HTTP local concluída com limitação de credenciais em 2026-09-22.  
+**Status:** concluída em 2026-09-22; validação automatizada e manual preliminar aprovadas.  
 **Estimativa:** 1–2 dias.
 
 #### Atividades
