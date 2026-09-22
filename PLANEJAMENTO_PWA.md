@@ -270,7 +270,7 @@ Não armazenar pelo service worker:
 
 ### P3 — Autenticação, RLS e Storage
 
-**Status:** em andamento; contrato de redirect e URLs locais configurados em 2026-09-22.  
+**Status:** em andamento; autenticação, RLS e isolamento por API validados com duas contas em 2026-09-22.  
 **Estimativa:** 2–3 dias.
 
 #### Atividades
@@ -303,7 +303,13 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Cadastro e reenvio de confirmação usam o callback baseado no domínio atual.
 - O callback existente continua preservando a troca de `code` por sessão.
 - Teste automatizado cobre domínio, caminho e query string do callback.
-- 17 arquivos e 62 testes aprovados.
+- Login de `usuario_a@teste.com.br` e `usuario_b@teste.com.br` aprovados com IDs distintos.
+- Consultas autenticadas de `cards`, `transactions`, `recurring_expenses`, `categories` e `user_profiles` não retornaram linhas de outro usuário.
+- Acesso cruzado direto por ID retornou zero registros nos testes B→A e A→B.
+- Listagem autenticada do bucket `avatars` não expôs caminhos de outro usuário.
+- Token inválido foi rejeitado com HTTP 403.
+- Rotas protegidas sem sessão redirecionaram para `/login` com HTTP 307.
+- 18 arquivos e 68 testes aprovados.
 - Typecheck e build aprovados com placeholders públicos.
 
 #### Validação remota somente leitura
@@ -321,7 +327,8 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Adicionar a Redirect URL exata do domínio de produção no Supabase, preservando a URL do web original.
 - Testar cadastro e confirmação de e-mail com conta de teste.
 - Testar sessão expirada, logout, troca de usuário e renovação.
-- Confirmar RLS e Storage com duas contas reais, sem alterar policies ou migrations.
+- Executar upload real de avatar com as duas contas e confirmar isolamento do Storage.
+- Confirmar o fluxo completo pela interface do navegador, incluindo logout e troca de usuário.
 - Avaliar no painel do Supabase a ativação da proteção contra senhas vazadas, apontada pelo advisor de segurança.
 - Avaliar posteriormente os três índices de chaves estrangeiras apontados pelo advisor de performance, sem aplicar alteração neste MVP.
 
