@@ -5,8 +5,8 @@
 ## 1. Estado atual
 
 **Atualizado em:** 2026-09-22  
-**Status geral:** P0, P1, P2 e P7 concluídas; P3 validada em nível de API e teste manual preliminar; P4 e P6 ainda em andamento; iPhone real e domínio de produção pendentes.
-**Próxima frente:** concluir a validação de P3 e continuar a adaptação mobile da P4.
+**Status geral:** P0, P1, P2 e P7 concluídas; P3 validada em nível de API e teste manual preliminar; P4 e P6 ainda em andamento; P8 está parcialmente concluída com produção no Vercel, faltando configurar e validar o callback de produção no Supabase.
+**Próxima frente:** adicionar `https://finance-pessoal-pwa.vercel.app/auth/callback` ao Supabase e validar autenticação no domínio de produção; depois continuar a adaptação mobile da P4.
 
 ### Frentes concluídas
 
@@ -23,6 +23,7 @@
 - [ ] P4 em andamento: navegação inferior, safe areas e viewport dinâmica ajustados.
 - [ ] P6 em andamento: testes automatizados do manifesto, ícones e regras de cache adicionados.
 - [x] P7 concluída: servidor local, endpoints PWA, ambiente Supabase real e validação manual preliminar verificados.
+- [ ] P8 em andamento: projeto Vercel independente criado, variáveis públicas configuradas e deployment de produção validado; callback de produção no Supabase ainda pendente.
 - [x] Plano de commits criado em `PLANO_DE_COMMITS.md`.
 
 ### Frentes pendentes
@@ -34,7 +35,7 @@
 - [ ] Adaptar a experiência para iPhone.
 - [ ] Validar autenticação, RLS, Storage e exportações.
 - [ ] Executar validação local completa.
-- [ ] Obter aprovação explícita para commit, push e deploy.
+- [x] Obter aprovação explícita para commit, push e deploy; autorização foi concedida e o deployment independente foi executado.
 
 ## 2. Objetivo
 
@@ -71,9 +72,9 @@ O PWA terá:
 7. Não aplicar migrations, `supabase db push` ou alterações no Supabase durante o MVP.
 8. A única alteração externa esperada é adicionar as Redirect URLs exatas do novo domínio, quando ele existir.
 9. Testes destrutivos devem usar contas e dados de teste controlados.
-10. Nenhum commit, push ou deploy será feito automaticamente.
+10. Nenhum commit, push ou deploy será feito sem autorização explícita; nesta frente a autorização foi concedida pelo usuário.
 11. O projeto deve ser servido localmente para validação antes de qualquer commit ou deploy.
-12. Push e deploy só podem ocorrer após confirmação explícita do usuário e verificação dos remotes e do vínculo Vercel.
+12. Push e deploy só podem ocorrer após confirmação explícita do usuário e verificação dos remotes e do vínculo Vercel; a implantação atual usa somente o novo projeto `finance-pessoal-pwa`.
 
 ## 5. Baseline confirmado
 
@@ -325,8 +326,8 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 
 #### Pendências externas
 
-- Definir o domínio oficial do PWA.
-- Adicionar a Redirect URL exata do domínio de produção no Supabase, preservando a URL do web original.
+- Domínio Vercel definido: `https://finance-pessoal-pwa.vercel.app`.
+- Adicionar a Redirect URL exata `https://finance-pessoal-pwa.vercel.app/auth/callback` no Supabase, preservando as URLs existentes do web original e do ambiente local.
 - Testar cadastro e confirmação de e-mail com conta de teste.
 - Testar sessão expirada, logout, troca de usuário e renovação.
 - Executar upload real de avatar com as duas contas e confirmar isolamento do Storage.
@@ -334,7 +335,7 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Avaliar no painel do Supabase a ativação da proteção contra senhas vazadas, apontada pelo advisor de segurança.
 - Avaliar posteriormente os três índices de chaves estrangeiras apontados pelo advisor de performance, sem aplicar alteração neste MVP.
 
-- Redirect URL do domínio de produção permanece pendente até a definição do domínio final.
+- Redirect URL do domínio de produção permanece pendente até ser adicionada no painel do Supabase.
 
 ### P4 — UX específica para iPhone
 
@@ -474,15 +475,15 @@ Sem aparelho real, os testes acima devem ser registrados como pendentes; auditor
 - Manifesto servido com `display: standalone` e `start_url: /dashboard`.
 - `/api/health` respondeu `200 {"status":"ok"}` com as credenciais públicas reais do projeto.
 - `git remote -v` aponta somente para o repositório independente `finance-pessoal-pwa`.
-- Não existe `.vercel/project.json`; `.env.local` existe apenas localmente e está ignorado pelo Git.
+- `.vercel/project.json` existe apenas localmente, está ignorado pelo Git e aponta para o novo projeto Vercel `finance-pessoal-pwa`; `.env.local` também existe apenas localmente e está ignorado pelo Git.
 
 > A chave pública foi gravada apenas no `.env.local`, que está ignorado pelo Git. Nenhuma chave secreta foi armazenada ou enviada ao repositório.
 
-Ainda pendentes nesta frente: executar health check com variáveis reais de ambiente controlado e finalizar a conferência antes do primeiro commit local.
+Não há pendências locais bloqueantes nesta frente. A validação de produção está registrada na P8.
 
 ### P8 — Commit, push e deploy independente
 
-**Status:** bloqueada até validação local e autorização explícita.  
+**Status:** em andamento; deployment de produção concluído e rotas principais verificadas em 2026-09-22; autenticação no domínio de produção ainda pendente.
 **Estimativa:** 1 dia, sem contar credenciais ou configuração externa.
 
 #### Pré-condições obrigatórias
@@ -496,6 +497,25 @@ Ainda pendentes nesta frente: executar health check com variáveis reais de ambi
 - Variáveis públicas do Supabase configuradas no ambiente correto.
 - Redirect URL do novo domínio adicionada ao Supabase.
 - Plano de rollback definido.
+
+#### Evidências da execução
+
+- Repositório independente: `https://github.com/Juniorreis25/finance-pessoal-pwa.git`.
+- Projeto Vercel independente: `finance-pessoal-pwa` (`prj_MHWJpaYdWPPeQOCS6syyXIivEUtw`).
+- Preset do projeto corrigido de `Other` para `Next.js`; o primeiro deployment servia apenas arquivos públicos e foi descartado operacionalmente.
+- Variáveis públicas do Supabase configuradas nos ambientes Development, Preview e Production do novo projeto, sem expor valores neste documento.
+- Deployment de produção validado a partir do commit `8f6ed6c` (`chore: ignore local Vercel project metadata`).
+- URL permanente: `https://finance-pessoal-pwa.vercel.app`.
+- Deployment verificado como `READY`; build Next.js concluiu TypeScript, geração estática e rotas App Router.
+- `/api/health` respondeu `200 {"status":"ok"}` no deployment e no alias permanente.
+- `/login` respondeu com a interface de autenticação; `/manifest.webmanifest` respondeu com `display: standalone` e `start_url: /dashboard`.
+- Não foram encontrados erros de runtime no projeto Vercel no período de verificação.
+
+#### Pendência para concluir P8
+
+- Adicionar no Supabase Auth a Redirect URL `https://finance-pessoal-pwa.vercel.app/auth/callback`.
+- Testar login, logout, troca de usuário, renovação de sessão e confirmação de e-mail pelo domínio Vercel.
+- Confirmar no navegador a instalação PWA e o fluxo de avatar/exportações em produção.
 
 Não fazer push ou deploy se qualquer vínculo com o projeto web original for encontrado.
 
@@ -511,7 +531,7 @@ Não fazer push ou deploy se qualquer vínculo com o projeto web original for en
 | PWA mobile cobrir conteúdo com barra/teclado | Médio | Safe areas, `100dvh` e testes reais | Aberto |
 | Exportação falhar no iOS | Médio | `canShare`, download fallback e teste manual | Aberto |
 | Correções divergirem entre web e PWA | Médio | Registro de origem e processo de portabilidade | Aberto |
-| Deploy apontar para projeto errado | Crítico | Verificação obrigatória de remote e `.vercel/project.json` | Aberto |
+| Deploy apontar para projeto errado | Crítico | Verificação obrigatória de remote e `.vercel/project.json` | Mitigado; projeto independente conferido |
 
 ## 9. Definição de pronto
 
@@ -551,7 +571,9 @@ Ao concluir qualquer frente:
 | 2026-09-22 | Manter o Supabase compartilhado | Preserva usuários e dados existentes | Exige cuidado com redirects, RLS e testes |
 | 2026-09-22 | Não implementar gravação offline | Evita duplicidade, conflito e exposição local | Offline será somente informativo |
 | 2026-09-22 | Não alterar migrations no MVP | Banco compartilhado e histórico remoto precisa de reconciliação | Mudanças de schema ficam fora do escopo |
-| 2026-09-22 | Não fazer push/deploy automaticamente | Regra local de validação e segurança operacional | Requer aprovação explícita ao final |
+| 2026-09-22 | Usar um projeto Vercel independente com preset explícito `Next.js` | O projeto criado inicialmente ficou com preset `Other` e não executou o build | Evita publicação apenas de arquivos estáticos |
+| 2026-09-22 | Publicar em `https://finance-pessoal-pwa.vercel.app` | Domínio Vercel independente definido pelo usuário | Exige Redirect URL correspondente no Supabase |
+| 2026-09-22 | Executar push/deploy após autorização explícita | Usuário autorizou a publicação do PWA independente | Deployment de produção validado; autenticação ainda precisa de teste no domínio |
 
 ## 12. Evidências e referências
 

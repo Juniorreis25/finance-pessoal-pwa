@@ -19,6 +19,10 @@ Este plano organiza o histórico para facilitar revisão, auditoria, rollback e 
 - Primeiro commit publicado em `main`: `6336c03` (`chore: initialize independent finance pessoal pwa`).
 - O primeiro commit consolidou o baseline, a documentação, a implementação PWA, a adaptação mobile e os testes que estavam preparados antes da publicação.
 - A partir do próximo commit, seguir a separação C08–C11 e manter cada intenção técnica isolada.
+- Projeto Vercel independente criado: `finance-pessoal-pwa`.
+- Preset Vercel corrigido para `Next.js` antes do deployment de produção; o primeiro deployment com preset `Other` não executou o build e não deve ser usado como referência.
+- Deployment de produção validado no alias `https://finance-pessoal-pwa.vercel.app`, a partir do commit `8f6ed6c`.
+- A documentação pós-deploy deve registrar o callback Supabase ainda pendente e não deve incluir chaves ou tokens.
 
 ## Ordem planejada
 
@@ -251,7 +255,7 @@ Como o primeiro commit já consolidou a preparação inicial, a sequência daqui
 1. Criar C08 com a validação de autenticação e domínio.
 2. Criar C09 com exportações e avatar.
 3. Criar C10 com a cobertura automatizada restante do PWA.
-4. Criar C11 após a validação local, Supabase e domínio.
+4. Concluir C11 após a validação de produção no Supabase e do domínio Vercel.
 
 Antes de cada commit, conferir:
 
