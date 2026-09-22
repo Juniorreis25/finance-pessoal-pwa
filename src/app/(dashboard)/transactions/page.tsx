@@ -1,7 +1,7 @@
 
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Fragment, useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { Plus, ArrowDownRight, ArrowUpRight, ArrowRightLeft, Edit2, Trash2, Search, CreditCard, Wallet, CalendarRange, ListTree } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
@@ -79,8 +79,9 @@ export default function TransactionsPage() {
         }
 
         const monthStart = startOfMonth(currentDate)
+        const previousMonthStart = subMonths(monthStart, 1)
         const nextMonthStart = addMonths(monthStart, 1)
-        const firstDate = format(monthStart, 'yyyy-MM-dd')
+        const firstDate = format(previousMonthStart, 'yyyy-MM-dd')
         const nextMonthDate = format(nextMonthStart, 'yyyy-MM-dd')
         const pageSize = 500
         const transactionRows: Transaction[] = []
@@ -166,9 +167,12 @@ export default function TransactionsPage() {
         }
     }
 
-    // Filter transactions by selected month, search term and card
-    const filteredTransactions = transactions.filter(tx => {
-        const matchesDate = isDateInCalendarMonth(tx.date, currentDate)
+    const previousMonthDate = subMonths(startOfMonth(currentDate), 1)
+
+    // The timeline spans two months; the summary and export still use only the focused month.
+    const timelineTransactions = transactions.filter(tx => {
+        const matchesDate = isDateInCalendarMonth(tx.date, currentDate) ||
+            isDateInCalendarMonth(tx.date, previousMonthDate)
 
         const matchesSearch = tx.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
             tx.category.toLowerCase().includes(searchTerm.toLowerCase())
@@ -182,41 +186,49 @@ export default function TransactionsPage() {
         return matchesDate && matchesSearch && matchesCard && matchesType
     })
 
-    const recurringOccurrences: Transaction[] = recurringExpenses
-        .filter(recurring => {
-            const occurrenceDate = getRecurringOccurrenceDate(recurring, currentDate)
-            const matchesSearch = recurring.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                recurring.category.toLowerCase().includes(searchTerm.toLowerCase())
-            const matchesType = selectedType === 'all' || recurring.type === selectedType
-            const matchesMethod = selectedCardIds.includes('all') || selectedCardIds.includes('cash')
+    const filteredTransactions = timelineTransactions.filter(tx => isDateInCalendarMonth(tx.date, currentDate))
 
-            return Boolean(occurrenceDate) && matchesSearch && matchesType && matchesMethod
-        })
-        .map(recurring => ({
-            id: `recurring-${recurring.id}-${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`,
-            recurring_id: recurring.id,
-            is_recurring: true,
-            description: recurring.description,
-            amount: recurring.amount,
-            type: recurring.type,
-            category: recurring.category,
-            date: getRecurringOccurrenceDate(recurring, currentDate)!,
-            purchase_date: null,
-            card_id: null,
-            installment_id: null,
-            installment_number: null,
-            total_installments: null,
-            cards: null,
-        }))
+    const recurringOccurrences: Transaction[] = [currentDate, previousMonthDate]
+        .flatMap(month => recurringExpenses
+            .filter(recurring => {
+                const occurrenceDate = getRecurringOccurrenceDate(recurring, month)
+                const matchesSearch = recurring.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    recurring.category.toLowerCase().includes(searchTerm.toLowerCase())
+                const matchesType = selectedType === 'all' || recurring.type === selectedType
+                const matchesMethod = selectedCardIds.includes('all') || selectedCardIds.includes('cash')
 
-    const displayedTransactions = [...filteredTransactions, ...recurringOccurrences]
-        .sort((a, b) => b.date.localeCompare(a.date))
+                return Boolean(occurrenceDate) && matchesSearch && matchesType && matchesMethod
+            })
+            .map(recurring => ({
+                id: `recurring-${recurring.id}-${month.getFullYear()}-${month.getMonth() + 1}`,
+                recurring_id: recurring.id,
+                is_recurring: true,
+                description: recurring.description,
+                amount: recurring.amount,
+                type: recurring.type,
+                category: recurring.category,
+                date: getRecurringOccurrenceDate(recurring, month)!,
+                purchase_date: null,
+                card_id: null,
+                installment_id: null,
+                installment_number: null,
+                total_installments: null,
+                cards: null,
+            })))
+
+    const displayedTransactions = [...timelineTransactions, ...recurringOccurrences]
+        .sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id))
     const totalPages = Math.max(1, Math.ceil(displayedTransactions.length / TRANSACTIONS_PER_PAGE))
     const visiblePage = Math.min(currentPage, totalPages)
     const paginatedTransactions = displayedTransactions.slice(
         (visiblePage - 1) * TRANSACTIONS_PER_PAGE,
         visiblePage * TRANSACTIONS_PER_PAGE
     )
+    const focusedMonthKey = format(currentDate, 'yyyy-MM')
+    const previousMonthKey = format(previousMonthDate, 'yyyy-MM')
+    const hasFocusedMonthTransactions = displayedTransactions.some(tx => tx.date.startsWith(focusedMonthKey))
+    const hasPreviousMonthTransactions = displayedTransactions.some(tx => tx.date.startsWith(previousMonthKey))
+    const hasActiveFilters = searchTerm.trim() !== '' || selectedType !== 'all' || !selectedCardIds.includes('all')
 
     // Calculate totals
     // Calculate totals including recurring items
@@ -333,6 +345,9 @@ export default function TransactionsPage() {
                 </div>
             </div>
 
+            <h2 className="text-sm font-semibold text-slate-300" id="focused-month-summary">
+                Resumo de {format(currentDate, 'MMMM yyyy', { locale: ptBR })}
+            </h2>
             {/* Master Summary Card - Expense Focus */}
             <div className="relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                 {/* Background decorative elements */}
@@ -433,8 +448,10 @@ export default function TransactionsPage() {
                 </div>
             </div>
 
-            {/* Transaction List - Floating Blocks */}
-            <div className="space-y-4">
+            {/* Transaction timeline */}
+            <section className="space-y-4" aria-labelledby="transaction-timeline-title">
+                <h2 className="text-lg font-bold text-white" id="transaction-timeline-title">Linha do tempo</h2>
+                <p className="text-xs text-slate-400">{format(currentDate, 'MMMM yyyy', { locale: ptBR })} e {format(previousMonthDate, 'MMMM yyyy', { locale: ptBR })}</p>
                 {loading ? (
                     <div className="p-12 text-center text-slate-500 flex justify-center">
                         <div className="animate-pulse flex flex-col gap-2">
@@ -442,7 +459,19 @@ export default function TransactionsPage() {
                         </div>
                     </div>
                 ) : displayedTransactions.length > 0 ? (
-                    paginatedTransactions.map((tx) => {
+                    <>
+                    {visiblePage === 1 && !hasFocusedMonthTransactions && (
+                        <div>
+                            <h3 className="flex items-center gap-3 pt-2 text-sm font-bold text-slate-200">
+                                <span>{format(currentDate, 'MMMM yyyy', { locale: ptBR })}</span>
+                                <span className="h-px flex-1 bg-white/20" aria-hidden="true" />
+                            </h3>
+                            <p className="pt-3 text-sm text-slate-400">Nenhum lançamento neste mês para os filtros atuais.</p>
+                        </div>
+                    )}
+                    {paginatedTransactions.map((tx, index) => {
+                        const monthKey = tx.date.slice(0, 7)
+                        const startsMonth = index === 0 || paginatedTransactions[index - 1].date.slice(0, 7) !== monthKey
                         const isInstallment = tx.installment_id && tx.total_installments && tx.total_installments > 1
 
                         // Calculate installment dates if applicable
@@ -456,8 +485,14 @@ export default function TransactionsPage() {
                         }
 
                         return (
+                            <Fragment key={tx.id}>
+                            {startsMonth && (
+                                <h3 className="flex items-center gap-3 pt-2 text-sm font-bold text-slate-200" id={`month-${monthKey}`}>
+                                    <span>{format(parseISO(`${monthKey}-01`), 'MMMM yyyy', { locale: ptBR })}</span>
+                                    <span className="h-px flex-1 bg-white/20" aria-hidden="true" />
+                                </h3>
+                            )}
                             <div
-                                key={tx.id}
                                 className="relative group bg-brand-deep-sea/80 backdrop-blur-sm p-5 sm:p-6 rounded-[2rem] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-white/5 shadow-xl hover:bg-brand-deep-sea transition-all"
                             >
                                 {/* Left: Icon & Info */}
@@ -470,7 +505,7 @@ export default function TransactionsPage() {
                                     </div>
                                     <div className="space-y-1.5 sm:space-y-2 min-w-0 flex-1">
                                         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                                            <h3 className="font-bold text-white text-base sm:text-lg tracking-tight leading-none truncate max-w-[180px] sm:max-w-none">{tx.description}</h3>
+                                            <h4 className="font-bold text-white text-base sm:text-lg tracking-tight leading-none truncate max-w-[180px] sm:max-w-none">{tx.description}</h4>
                                             <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-lg bg-white/5 border border-white/5 flex-shrink-0">
                                                 {tx.card_id ? (
                                                     <CreditCard className="w-3 h-3 text-brand-accent opacity-70" />
@@ -505,11 +540,9 @@ export default function TransactionsPage() {
                                             <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 sm:py-1 rounded-full bg-white/5 text-brand-gray border border-white/5">
                                                 {tx.category}
                                             </span>
-                                            {!isInstallment && (
-                                                <span className="text-[11px] sm:text-xs font-bold text-brand-gray uppercase tracking-widest opacity-60">
-                                                    {format(parseISO(tx.date), "d 'de' MMM", { locale: ptBR })}
-                                                </span>
-                                            )}
+                                            <span className="text-[11px] sm:text-xs font-bold text-brand-gray uppercase tracking-widest opacity-60">
+                                                {format(parseISO(tx.date), "d 'de' MMM", { locale: ptBR })}
+                                            </span>
                                             {tx.purchase_date && (
                                                 <span className={`text-[9px] font-bold text-brand-accent/50 uppercase tracking-widest ${!isInstallment ? 'border-l border-white/10 pl-2 sm:pl-3' : ''}`}>
                                                     Dt Compra: {format(parseISO(tx.purchase_date), "dd/MM/yy")}
@@ -534,7 +567,7 @@ export default function TransactionsPage() {
                                             className="px-3 py-2 text-[9px] font-black uppercase tracking-widest text-brand-success bg-brand-success/10 border border-brand-success/10 rounded-xl"
                                             title="Gerenciar recorrência"
                                         >
-                                            Recorrente
+                                            Recorrente · previsto
                                         </Link>
                                     ) : (
                                         <div className="flex gap-0.5 sm:gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all lg:translate-x-2 lg:group-hover:translate-x-0">
@@ -548,19 +581,32 @@ export default function TransactionsPage() {
                                     )}
                                 </div>
                             </div>
+                            </Fragment>
 
                         )
-                    })
+                    })}
+                    {visiblePage === totalPages && !hasPreviousMonthTransactions && (
+                        <div>
+                            <h3 className="flex items-center gap-3 pt-2 text-sm font-bold text-slate-200">
+                                <span>{format(previousMonthDate, 'MMMM yyyy', { locale: ptBR })}</span>
+                                <span className="h-px flex-1 bg-white/20" aria-hidden="true" />
+                            </h3>
+                            <p className="pt-3 text-sm text-slate-400">Nenhum lançamento neste mês para os filtros atuais.</p>
+                        </div>
+                    )}
+                    </>
                 ) : (
                     <div className="p-16 text-center flex flex-col items-center bg-slate-900 rounded-3xl border border-slate-800 border-dashed">
                         <div className="p-4 bg-slate-800 rounded-full mb-4">
                             <ArrowRightLeft className="w-8 h-8 text-slate-400" />
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-2">Sem transações para este filtro</h3>
+                        <h3 className="text-xl font-bold text-white mb-2">
+                            {hasActiveFilters ? 'Sem transações para este filtro' : 'Sem lançamentos nestes dois meses'}
+                        </h3>
                         <p className="text-slate-400 mb-6 max-w-sm mx-auto">
-                            Tente ajustar seus filtros ou mude o período selecionado.
+                            {hasActiveFilters ? 'Tente ajustar os filtros ou mude o período selecionado.' : 'Mude o mês selecionado para consultar outro período.'}
                         </p>
-                        <button
+                        {hasActiveFilters && <button
                             onClick={() => {
                                 setSearchTerm('')
                                 setSelectedCardIds(['all'])
@@ -570,7 +616,7 @@ export default function TransactionsPage() {
                             className="text-brand-accent font-bold hover:underline uppercase text-[10px] tracking-widest"
                         >
                             Limpar Filtros
-                        </button>
+                        </button>}
                     </div>
                 )}
                 {!loading && displayedTransactions.length > 0 && (
@@ -601,7 +647,7 @@ export default function TransactionsPage() {
                         </div>
                     </nav>
                 )}
-            </div>
+            </section>
         </div >
     )
 }
