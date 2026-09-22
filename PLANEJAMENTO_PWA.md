@@ -5,7 +5,7 @@
 ## 1. Estado atual
 
 **Atualizado em:** 2026-09-22  
-**Status geral:** P0, P1 e P2 concluídas; P3 parcialmente validada no Supabase; P4, P6 e P7 iniciadas; confirmação por duas contas e domínio ainda pendentes.
+**Status geral:** P0, P1 e P2 concluídas; P3 avançada com Redirect URLs configuradas; P4, P6 e P7 iniciadas; confirmação por duas contas e domínio de produção ainda pendentes.
 **Próxima frente:** concluir a validação de P3 e continuar a adaptação mobile da P4.
 
 ### Frentes concluídas
@@ -270,7 +270,7 @@ Não armazenar pelo service worker:
 
 ### P3 — Autenticação, RLS e Storage
 
-**Status:** em andamento; navegação base e contrato de redirect concluídos em 2026-09-22.  
+**Status:** em andamento; contrato de redirect e URLs locais configurados em 2026-09-22.  
 **Estimativa:** 2–3 dias.
 
 #### Atividades
@@ -299,6 +299,7 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 #### Evidências parciais
 
 - Redirect de autenticação centralizado em `src/lib/supabase/redirect.ts`.
+- Redirect URLs locais informadas pelo usuário no painel do Supabase.
 - Cadastro e reenvio de confirmação usam o callback baseado no domínio atual.
 - O callback existente continua preservando a troca de `code` por sessão.
 - Teste automatizado cobre domínio, caminho e query string do callback.
@@ -317,12 +318,14 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 #### Pendências externas
 
 - Definir o domínio oficial do PWA.
-- Adicionar a Redirect URL exata no Supabase, preservando a URL do web original.
+- Adicionar a Redirect URL exata do domínio de produção no Supabase, preservando a URL do web original.
 - Testar cadastro e confirmação de e-mail com conta de teste.
 - Testar sessão expirada, logout, troca de usuário e renovação.
 - Confirmar RLS e Storage com duas contas reais, sem alterar policies ou migrations.
 - Avaliar no painel do Supabase a ativação da proteção contra senhas vazadas, apontada pelo advisor de segurança.
 - Avaliar posteriormente os três índices de chaves estrangeiras apontados pelo advisor de performance, sem aplicar alteração neste MVP.
+
+- Redirect URL do domínio de produção permanece pendente até a definição do domínio final.
 
 ### P4 — UX específica para iPhone
 
