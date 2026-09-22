@@ -511,11 +511,12 @@ Não há pendências locais bloqueantes nesta frente. A validação de produçã
 - Projeto Vercel independente: `finance-pessoal-pwa` (`prj_MHWJpaYdWPPeQOCS6syyXIivEUtw`).
 - Preset do projeto corrigido de `Other` para `Next.js`; o primeiro deployment servia apenas arquivos públicos e foi descartado operacionalmente.
 - Variáveis públicas do Supabase configuradas nos ambientes Development, Preview e Production do novo projeto, sem expor valores neste documento.
-- Deployment de produção validado a partir do commit `8f6ed6c` (`chore: ignore local Vercel project metadata`).
+- Deployment de produção validado após o commit mobile `5bc15a1` (`feat(mobile): harden iPhone touch and responsive layouts`), deployment `dpl_GZ5jwHipqbkz7dkDeCmakXo9hmxK`.
 - URL permanente: `https://finance-pessoal-pwa.vercel.app`.
 - Deployment verificado como `READY`; build Next.js concluiu TypeScript, geração estática e rotas App Router.
 - `/api/health` respondeu `200 {"status":"ok"}` no deployment e no alias permanente.
 - `/login` respondeu com a interface de autenticação; `/manifest.webmanifest` respondeu com `display: standalone` e `start_url: /dashboard`.
+- O alias `https://finance-pessoal-pwa.vercel.app` foi atualizado após a rodada de compatibilidade mobile.
 - Após a adição da Redirect URL, a abertura de `/auth/callback?code=invalid-test-code` redirecionou corretamente para `/login?error=auth_callback`, sem 404.
 - A validação de produção não registrou erros ou warnings no console do navegador.
 - Não foram encontrados erros de runtime no projeto Vercel no período de verificação.
