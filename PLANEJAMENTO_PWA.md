@@ -5,8 +5,8 @@
 ## 1. Estado atual
 
 **Atualizado em:** 2026-09-22  
-**Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento; P5 permanece pendente.
-**Próxima frente:** priorizar a adaptação mobile da P4 e a validação em iPhone real; exportações e avatar ficam em prioridade baixa.
+**Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento. P5 foi explicitamente adiada.
+**Próxima frente:** tornar os fluxos essenciais funcionais, estáveis e compatíveis com o uso diário no iPhone; exportações e avatar ficam fora da prioridade do MVP atual.
 
 ### Frentes concluídas
 
@@ -377,10 +377,12 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 
 Ainda pendentes nesta frente: revisão dos demais formulários, gráficos, tabelas e validação visual em iPhone real.
 
-### P5 — Exportações e avatar (prioridade baixa)
+### P5 — Exportações e avatar (adiada)
 
-**Status:** pendente.  
+**Status:** adiada por decisão do usuário; não bloqueia o MVP funcional mobile.
 **Estimativa:** 2–3 dias.
+
+Esta frente não será executada antes da conclusão da compatibilidade mobile e da validação dos fluxos essenciais no iPhone.
 
 #### Atividades
 
@@ -515,7 +517,7 @@ Não há pendências locais bloqueantes nesta frente. A validação de produçã
 
 #### Pendências relacionadas a outras frentes
 
-- Confirmar em iPhone real a instalação PWA e o fluxo de avatar/exportações em produção; essas atividades pertencem às frentes P4/P5/P6.
+- Confirmar em iPhone real a instalação PWA e os fluxos essenciais em produção; avatar e exportações permanecem adiados na P5.
 
 #### Validação final registrada
 
@@ -535,7 +537,7 @@ Não fazer push ou deploy se qualquer vínculo com o projeto web original for en
 | Service worker servir chunks incompatíveis | Médio/alto | Versionamento, atualização controlada e fallback | Aberto |
 | RLS remota divergir das migrations locais | Alto | Não aplicar SQL; reconciliar apenas em frente separada | Aberto |
 | PWA mobile cobrir conteúdo com barra/teclado | Médio | Safe areas, `100dvh` e testes reais | Aberto |
-| Exportação falhar no iOS | Médio | `canShare`, download fallback e teste manual | Aberto |
+| Exportação falhar no iOS | Médio | Frente P5 adiada; validar somente após estabilizar o MVP mobile | Adiado |
 | Correções divergirem entre web e PWA | Médio | Registro de origem e processo de portabilidade | Aberto |
 | Deploy apontar para projeto errado | Crítico | Verificação obrigatória de remote e `.vercel/project.json` | Mitigado; projeto independente conferido |
 
@@ -580,6 +582,7 @@ Ao concluir qualquer frente:
 | 2026-09-22 | Usar um projeto Vercel independente com preset explícito `Next.js` | O projeto criado inicialmente ficou com preset `Other` e não executou o build | Evita publicação apenas de arquivos estáticos |
 | 2026-09-22 | Publicar em `https://finance-pessoal-pwa.vercel.app` | Domínio Vercel independente definido pelo usuário | Exige Redirect URL correspondente no Supabase |
 | 2026-09-22 | Executar push/deploy após autorização explícita | Usuário autorizou a publicação do PWA independente | Deployment de produção validado; autenticação ainda precisa de teste no domínio |
+| 2026-09-22 | Priorizar funcionalidade e compatibilidade mobile no iPhone | Uso familiar depende primeiro de fluxos essenciais estáveis no dispositivo | Exportações e avatar foram adiados para depois do MVP mobile |
 
 ## 12. Evidências e referências
 

@@ -23,6 +23,7 @@ Este plano organiza o histórico para facilitar revisão, auditoria, rollback e 
 - Preset Vercel corrigido para `Next.js` antes do deployment de produção; o primeiro deployment com preset `Other` não executou o build e não deve ser usado como referência.
 - Deployment de produção validado no alias `https://finance-pessoal-pwa.vercel.app`, a partir do commit `8f6ed6c`.
 - A documentação pós-deploy deve registrar o callback Supabase ainda pendente e não deve incluir chaves ou tokens.
+- A frente de exportações/avatar foi adiada; os próximos commits devem priorizar compatibilidade, estabilidade e fluxos essenciais no iPhone.
 
 ## Ordem planejada
 
@@ -195,7 +196,7 @@ test(auth): cover PWA callback and session boundaries
 
 **Intervenção externa:** adicionar Redirect URLs exatas no Supabase somente quando o novo domínio estiver definido.
 
-### C09 — Exportações e avatar no iPhone
+### C09 — Exportações e avatar no iPhone (adiada)
 
 **Mensagem sugerida:**
 
@@ -203,7 +204,9 @@ test(auth): cover PWA callback and session boundaries
 feat(mobile): improve exports and avatar upload fallback
 ```
 
-**Incluir:**
+**Status:** adiada até a conclusão da compatibilidade mobile e da validação dos fluxos essenciais no iPhone.
+
+**Incluir quando retomada:**
 
 - `Web Share API` com `navigator.canShare`;
 - fallback de download;
@@ -253,9 +256,10 @@ docs: record validation results and remaining limitations
 Como o primeiro commit já consolidou a preparação inicial, a sequência daqui em diante deve ser:
 
 1. Criar C08 com a validação de autenticação e domínio.
-2. Criar C09 com exportações e avatar.
+2. Priorizar correções de compatibilidade mobile e fluxos essenciais no iPhone.
 3. Criar C10 com a cobertura automatizada restante do PWA.
-4. Concluir C11 após a validação de produção no Supabase e do domínio Vercel.
+4. Retomar C09 somente após o MVP mobile estar estável.
+5. Concluir C11 após a validação das frentes prioritárias.
 
 Antes de cada commit, conferir:
 
