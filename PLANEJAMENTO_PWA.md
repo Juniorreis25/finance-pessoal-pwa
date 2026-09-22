@@ -610,7 +610,9 @@ Ao concluir qualquer frente:
 - `npm test -- --reporter=dot`: 76 testes aprovados, incluindo agrupamento e paginação mobile.
 - `npx tsc --noEmit`: aprovado. `npm run build`: aprovado. `npm run lint`: 0 erros; 19 avisos preexistentes fora dos arquivos desta frente.
 - Navegador local em 390 px: lista carregou com dados reais, agrupamento, busca e troca de mês verificados; sem erros de console observados. Comparação visual registrada em `design-qa.md`.
-- Usuário validou a tela no navegador local renderizado em 390 × 844 px e autorizou commit e deploy. A checagem no iPhone real continua recomendada após a publicação.
+- Usuário validou a tela no navegador local renderizado em 390 × 844 px e autorizou commit e deploy. Código, testes e QA versionados em `b75011d` e enviados ao repositório independente.
+- Primeira publicação de produção: `dpl_67hwrnbaxngqKz9zyARr5ohSuKqw`, status `READY`, alias `https://finance-pessoal-pwa.vercel.app`. `/api/health` respondeu `200 {"status":"ok"}`; `/transactions` sem sessão redirecionou para `/login`, sem erros de console observados.
+- A checagem de toque e safe area no iPhone real continua recomendada. Nenhuma alteração de Supabase ou do projeto web original foi necessária.
 
 ## 12. Evidências e referências
 
