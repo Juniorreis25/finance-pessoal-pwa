@@ -22,8 +22,10 @@ Este plano organiza o histórico para facilitar revisão, auditoria, rollback e 
 - Projeto Vercel independente criado: `finance-pessoal-pwa`.
 - Preset Vercel corrigido para `Next.js` antes do deployment de produção; o primeiro deployment com preset `Other` não executou o build e não deve ser usado como referência.
 - Deployment de produção validado no alias `https://finance-pessoal-pwa.vercel.app`, a partir do commit `8f6ed6c`.
-- A documentação pós-deploy deve registrar o callback Supabase ainda pendente e não deve incluir chaves ou tokens.
+- A documentação pós-deploy deve registrar a validação do callback Supabase e não deve incluir chaves ou tokens.
 - A frente de exportações/avatar foi adiada; os próximos commits devem priorizar compatibilidade, estabilidade e fluxos essenciais no iPhone.
+- Commit de implementação mobile: `5bc15a1` (`feat(mobile): harden iPhone touch and responsive layouts`).
+- A implementação foi validada em viewport 390x844 nas rotas essenciais, sem overflow horizontal e sem avisos de dimensão dos gráficos.
 
 ## Ordem planejada
 

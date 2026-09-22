@@ -335,11 +335,11 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Avaliar no painel do Supabase a ativação da proteção contra senhas vazadas, apontada pelo advisor de segurança.
 - Avaliar posteriormente os três índices de chaves estrangeiras apontados pelo advisor de performance, sem aplicar alteração neste MVP.
 
-- Redirect URL do domínio de produção foi informada pelo usuário como adicionada no painel do Supabase; falta validar o login real nesse domínio.
+- Redirect URL do domínio de produção foi adicionada no painel do Supabase; o usuário informou que os testes de produção foram concluídos com sucesso.
 
 ### P4 — UX específica para iPhone
 
-**Status:** em andamento; navegação, safe areas e primeira adaptação de formulários concluídas em 2026-09-22.  
+**Status:** em andamento; primeira rodada de navegação, safe areas, formulários e gráficos concluída e validada em viewport mobile em 2026-09-22.
 **Estimativa:** 4–6 dias.
 
 #### Atividades
@@ -373,9 +373,14 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Formulários principais receberam espaçamento responsivo, áreas de toque mínimas e campos numéricos adequados para teclado móvel.
 - Modal de recorrência recebeu rolagem limitada e padding de safe area para uso com teclado aberto.
 - Hostname do Storage Supabase configurado no `next/image`, permitindo exibir avatares remotos no perfil.
-- Build, typecheck e 68 testes continuam aprovados.
+- Controles principais receberam altura mínima de 44px para toque e o Safari recebe fontes de 16px em campos para evitar zoom automático.
+- Containers de dashboard e formulários foram ajustados com `min-w-0`, espaçamento responsivo e títulos/valores adaptáveis a telas estreitas.
+- Containers Recharts receberam dimensão inicial e mínimos explícitos; a validação visual não registrou mais avisos de dimensão.
+- Rotas `/dashboard`, `/transactions`, `/transactions/new`, `/cards`, `/cards/new`, `/recurring`, `/recurring/new` e `/profile` foram verificadas em viewport 390x844 sem overflow horizontal.
+- Navegação inferior e abertura do menu lateral foram acionadas e verificadas por toque em viewport mobile.
+- Build, typecheck e 68 testes continuam aprovados; lint permanece sem erros.
 
-Ainda pendentes nesta frente: revisão dos demais formulários, gráficos, tabelas e validação visual em iPhone real.
+Ainda pendentes nesta frente: validação visual e funcional em iPhone real, teclado nativo, modo standalone, rotação, conexão lenta e sessão expirada.
 
 ### P5 — Exportações e avatar (adiada)
 
