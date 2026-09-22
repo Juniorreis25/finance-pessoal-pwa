@@ -5,8 +5,8 @@
 ## 1. Estado atual
 
 **Atualizado em:** 2026-09-22  
-**Status geral:** P0, P1, P2 e P7 concluídas; P3 validada em nível de API e teste manual preliminar; P4 e P6 ainda em andamento; P8 está parcialmente concluída com produção no Vercel, faltando configurar e validar o callback de produção no Supabase.
-**Próxima frente:** adicionar `https://finance-pessoal-pwa.vercel.app/auth/callback` ao Supabase e validar autenticação no domínio de produção; depois continuar a adaptação mobile da P4.
+**Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento; P5 permanece pendente.
+**Próxima frente:** continuar a adaptação mobile da P4 e validar exportações/avatar na P5, mantendo os testes reais em iPhone como pendência explícita.
 
 ### Frentes concluídas
 
@@ -23,7 +23,7 @@
 - [ ] P4 em andamento: navegação inferior, safe areas e viewport dinâmica ajustados.
 - [ ] P6 em andamento: testes automatizados do manifesto, ícones e regras de cache adicionados.
 - [x] P7 concluída: servidor local, endpoints PWA, ambiente Supabase real e validação manual preliminar verificados.
-- [ ] P8 em andamento: projeto Vercel independente criado, variáveis públicas configuradas e deployment de produção validado; callback de produção no Supabase ainda pendente.
+- [x] P8 concluída: projeto Vercel independente, variáveis públicas, Redirect URL, deployment e testes manuais de produção validados.
 - [x] Plano de commits criado em `PLANO_DE_COMMITS.md`.
 
 ### Frentes pendentes
@@ -483,7 +483,7 @@ Não há pendências locais bloqueantes nesta frente. A validação de produçã
 
 ### P8 — Commit, push e deploy independente
 
-**Status:** em andamento; deployment de produção concluído e rotas principais verificadas em 2026-09-22; autenticação no domínio de produção ainda pendente.
+**Status:** concluída em 2026-09-22; deployment, callback e testes manuais de produção validados.
 **Estimativa:** 1 dia, sem contar credenciais ou configuração externa.
 
 #### Pré-condições obrigatórias
@@ -513,10 +513,15 @@ Não há pendências locais bloqueantes nesta frente. A validação de produçã
 - A validação de produção não registrou erros ou warnings no console do navegador.
 - Não foram encontrados erros de runtime no projeto Vercel no período de verificação.
 
-#### Pendência para concluir P8
+#### Pendências relacionadas a outras frentes
 
-- Testar login, logout, troca de usuário, renovação de sessão e confirmação de e-mail pelo domínio Vercel.
-- Confirmar no navegador a instalação PWA e o fluxo de avatar/exportações em produção.
+- Confirmar em iPhone real a instalação PWA e o fluxo de avatar/exportações em produção; essas atividades pertencem às frentes P4/P5/P6.
+
+#### Validação final registrada
+
+- Redirect URL de produção foi adicionada ao Supabase pelo usuário.
+- O usuário realizou os testes de produção e informou sucesso.
+- A validação inclui o acesso ao app publicado no domínio Vercel e o fluxo de autenticação após a configuração do callback.
 
 Não fazer push ou deploy se qualquer vínculo com o projeto web original for encontrado.
 
