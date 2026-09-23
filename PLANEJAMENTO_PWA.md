@@ -633,7 +633,15 @@ Ao concluir qualquer frente:
 - Evidências visuais do navegador mobile: `.audit/mobile-review/01-cartao-editar.png`, `02-transacao-editar.png`, `03-perfil.png` e `04-cadastro.png`. A rota de recorrência/modal foi revisada no código, mas não capturada: a conta de teste não tinha recorrências e a sessão expirou; nenhum dado foi criado ou alterado para contornar isso.
 - `impeccable detect` não apontou falhas visuais estáticas nos arquivos revistos. Em 2026-09-23, `npx tsc --noEmit`, 82 testes (22 arquivos) e `npm run build` passaram. `npm run lint` passou sem erros, com 4 avisos preexistentes em arquivos fora do escopo desta frente. `/api/health` respondeu `200 {"status":"ok"}`.
 - Relatório e sequência da auditoria: `.audit/mobile-review/README.md`.
-- **Status:** implementação e verificações automatizadas concluídas; disponível localmente para validação. Recomenda-se conferir interação/toque em iPhone real; sem commit ou deploy nesta etapa.
+- **Status:** implementação e verificações automatizadas concluídas; commit `c265902` enviado para `main` e publicado em produção. Recomenda-se conferir interação/toque em iPhone real.
+
+### Refino mobile dos controles de parcelamento e recorrência
+
+- No mobile, “Compra parcelada” e “Despesa recorrente” agora aparecem agrupadas em um painel compacto com separador e uma orientação explícita de exclusividade. No desktop, os dois cartões independentes e seus estilos permanecem.
+- O trilho visual dos interruptores foi reduzido no mobile, preservando alvos de toque de 44 × 44 px, foco visível e rótulos acessíveis. Campos de quantidade e resumo do parcelamento continuam condicionais.
+- Verificação visual local em 390 × 844 px e 1280 × 900 px, sem salvar transação; a renderização mobile ficou agrupada e a desktop manteve os cartões separados.
+- Testes: 83 aprovados em 22 arquivos; `npx tsc --noEmit` e `npm run build` aprovados; lint sem erros, com 4 avisos preexistentes; detector Impeccable sem apontamentos antes do último ajuste de divisor.
+- **Status:** ajuste pronto e validado; commit, push e deploy registrados após a publicação.
 
 ## 12. Evidências e referências
 

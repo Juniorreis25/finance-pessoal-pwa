@@ -72,6 +72,27 @@ describe('TransactionForm', () => {
         expect(screen.getByPlaceholderText(/Mensal/i)).toBeInTheDocument()
     })
 
+    it('groups expense options accessibly and keeps installment and recurrence mutually exclusive', () => {
+        render(<TransactionForm />)
+
+        expect(screen.getByRole('group', { name: 'Opções da transação' })).toBeInTheDocument()
+        expect(screen.getByText('Escolha uma opção: parcelada ou recorrente.')).toBeInTheDocument()
+
+        const installmentToggle = screen.getByRole('button', { name: 'Compra parcelada' })
+        const recurringToggle = screen.getByRole('button', { name: 'Despesa recorrente' })
+
+        expect(installmentToggle).toHaveAttribute('aria-pressed', 'false')
+        expect(recurringToggle).toHaveAttribute('aria-pressed', 'false')
+
+        fireEvent.click(installmentToggle)
+        expect(installmentToggle).toHaveAttribute('aria-pressed', 'true')
+        expect(recurringToggle).toHaveAttribute('aria-pressed', 'false')
+
+        fireEvent.click(recurringToggle)
+        expect(installmentToggle).toHaveAttribute('aria-pressed', 'false')
+        expect(recurringToggle).toHaveAttribute('aria-pressed', 'true')
+    })
+
     it('submits transaction successfully', async () => {
         render(<TransactionForm />)
 
@@ -100,10 +121,8 @@ describe('TransactionForm', () => {
         fireEvent.change(screen.getByPlaceholderText(/0.00/i), { target: { value: '12000' } })
         fireEvent.change(screen.getByLabelText(/Categoria/i), { target: { value: 'Moradia' } })
 
-        const recurringLabel = screen.getByText(/Despesa Recorrente/i)
-        const recurringButton = recurringLabel.parentElement?.parentElement?.querySelector('button')
-        expect(recurringButton).not.toBeNull()
-        fireEvent.click(recurringButton!)
+        const recurringButton = screen.getByRole('button', { name: 'Despesa recorrente' })
+        fireEvent.click(recurringButton)
 
         fireEvent.click(screen.getByRole('button', { name: /Salvar/i }))
 

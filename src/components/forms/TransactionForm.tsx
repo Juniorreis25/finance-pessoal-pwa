@@ -440,100 +440,105 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                             </div>
                         </div>
                     )}
+                </div>
 
-                    {type === 'expense' ? (
-                        <div className="bg-brand-nav p-5 rounded-[1.5rem] border border-white/5">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className={`p-2 rounded-xl transition-all ${isInstallment ? 'bg-brand-accent text-black' : 'bg-white/5 text-brand-gray'}`}>
-                                        <CalendarClock className="w-4 h-4" />
-                                    </div>
-                                    <p className="font-black text-white text-[9px] uppercase tracking-[0.2em] opacity-80">Transação Parcelada?</p>
-                                </div>
-                                <button
-                                    type="button"
-                                    aria-label="Marcar despesa como parcelada"
-                                    aria-pressed={isInstallment}
-                                    onClick={() => { const next = !isInstallment; setIsInstallment(next); if (next) setIsRecurring(false) }}
-                                    className={`relative min-h-11 w-12 rounded-full transition-all ${isInstallment ? 'bg-brand-accent' : 'bg-white/10'}`}
-                                >
-                                    <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all shadow-xl ${isInstallment ? 'left-6' : 'left-1'}`} />
-                                </button>
-                            </div>
-
-                            {isInstallment && (
-                                <div className="pt-4 mt-4 border-t border-white/5 animate-in fade-in slide-in-from-top-2 duration-300">
-                                    <label htmlFor="installments" className="block text-[9px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 opacity-60">
-                                        QUANTIDADE DE PARCELAS
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            id="installments"
-                                            name="installments"
-                                            type="number"
-                                            min="2"
-                                            max="48"
-                                            required
-                                            className="w-full min-h-12 px-4 py-3 bg-brand-deep-sea border border-white/5 rounded-xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white text-center"
-                                            value={installments}
-                                            onChange={(e) => setInstallments(parseInt(e.target.value))}
-                                        />
-                                        <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand-accent">
-                                            <Calculator className="w-4 h-4 opacity-30" />
-                                        </div>
-                                    </div>
-                                    {installmentSummary && (
-                                        <p className="mt-3 text-[9px] font-bold text-brand-accent/60 uppercase tracking-widest text-center">
-                                            {installments}x de {installmentSummary.monthlyValue} • Final em {installmentSummary.lastDate}
-                                        </p>
-                                    )}
-                                </div>
+                    <div
+                        role="group"
+                        aria-labelledby="transaction-options-title"
+                        className="flex flex-col gap-0 rounded-2xl border border-white/5 bg-brand-nav px-4 sm:gap-5 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0"
+                    >
+                        <div className="pb-1 pt-3 sm:hidden">
+                            <h3 id="transaction-options-title" className="text-sm font-semibold text-white">Opções da transação</h3>
+                            {type === 'expense' && (
+                                <p id="transaction-options-note" className="mt-1 text-xs text-brand-gray">
+                                    Escolha uma opção: parcelada ou recorrente.
+                                </p>
                             )}
                         </div>
-                    ) : (
-                        <div className="bg-brand-nav p-5 rounded-[1.5rem] border border-white/5">
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className={`p-2 rounded-xl transition-all ${isRecurring ? 'bg-brand-success text-black' : 'bg-white/5 text-brand-gray'}`}>
-                                        <Repeat className="w-4 h-4" />
+
+                        {type === 'expense' && (
+                            <div className="py-3 sm:rounded-[1.5rem] sm:border sm:border-white/5 sm:bg-brand-nav sm:p-5">
+                                <div className="flex items-center justify-between gap-3">
+                                    <div className="flex min-w-0 items-center gap-3">
+                                        <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-all sm:h-auto sm:w-auto sm:rounded-xl sm:p-2 ${isInstallment ? 'bg-brand-accent text-black' : 'bg-white/5 text-brand-gray'}`}>
+                                            <CalendarClock className="h-4 w-4" />
+                                        </div>
+                                        <p id="installment-option-title" className="text-sm font-semibold text-white sm:text-[9px] sm:font-black sm:uppercase sm:tracking-[0.2em] sm:opacity-80">
+                                            Compra parcelada
+                                        </p>
                                     </div>
-                                    <p className="font-black text-white text-[9px] uppercase tracking-[0.2em] opacity-80">Receita Recorrente?</p>
+                                    <button
+                                        type="button"
+                                        aria-labelledby="installment-option-title"
+                                        aria-describedby="transaction-options-note"
+                                        aria-pressed={isInstallment}
+                                        onClick={() => { const next = !isInstallment; setIsInstallment(next); if (next) setIsRecurring(false) }}
+                                        className={`relative grid min-h-11 w-11 shrink-0 place-items-center rounded-full bg-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent focus-visible:ring-offset-2 focus-visible:ring-offset-brand-nav sm:w-12 ${isInstallment ? 'sm:bg-brand-accent' : 'sm:bg-white/10'}`}
+                                    >
+                                        <span className={`relative h-5 w-9 rounded-full transition-colors sm:h-full sm:w-full ${isInstallment ? 'bg-brand-accent sm:bg-brand-accent' : 'bg-white/10 sm:bg-white/10'}`}>
+                                            <span className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-all sm:top-1 sm:h-5 sm:w-5 ${isInstallment ? 'translate-x-4 sm:left-6 sm:translate-x-0' : 'translate-x-0 sm:left-1'}`} />
+                                        </span>
+                                    </button>
+                                </div>
+
+                                {isInstallment && (
+                                    <div className="mt-3 border-t border-white/5 pt-3 animate-in fade-in slide-in-from-top-2 duration-300 sm:mt-4 sm:pt-4">
+                                        <label htmlFor="installments" className="mb-2 block text-xs font-semibold text-brand-gray sm:text-[9px] sm:font-black sm:uppercase sm:tracking-[0.2em] sm:opacity-60">
+                                            Quantidade de parcelas
+                                        </label>
+                                        <div className="relative">
+                                            <input
+                                                id="installments"
+                                                name="installments"
+                                                type="number"
+                                                min="2"
+                                                max="48"
+                                                required
+                                                className="w-full min-h-12 px-4 py-3 bg-brand-deep-sea border border-white/5 rounded-xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white text-center"
+                                                value={installments}
+                                                onChange={(e) => setInstallments(parseInt(e.target.value))}
+                                            />
+                                            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-brand-accent">
+                                                <Calculator className="w-4 h-4 opacity-30" />
+                                            </div>
+                                        </div>
+                                        {installmentSummary && (
+                                            <p className="mt-3 text-xs font-semibold text-brand-accent/80 text-center sm:text-[9px] sm:font-bold sm:text-brand-accent/60 sm:uppercase sm:tracking-widest">
+                                                {installments}x de {installmentSummary.monthlyValue} • Final em {installmentSummary.lastDate}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        <div className={`py-3 sm:rounded-[1.5rem] sm:border sm:border-white/5 sm:bg-brand-nav sm:p-5 ${type === 'expense' ? 'border-t border-white/5' : ''}`}>
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex min-w-0 items-center gap-3">
+                                    <div className={`grid h-8 w-8 shrink-0 place-items-center rounded-lg transition-all sm:h-auto sm:w-auto sm:rounded-xl sm:p-2 ${isRecurring ? 'bg-brand-success text-black' : 'bg-white/5 text-brand-gray'}`}>
+                                        <Repeat className="h-4 w-4" />
+                                    </div>
+                                    <p id="recurring-option-title" className="text-sm font-semibold text-white sm:text-[9px] sm:font-black sm:uppercase sm:tracking-[0.2em] sm:opacity-80">
+                                        {type === 'expense' ? 'Despesa recorrente' : 'Receita recorrente'}
+                                    </p>
                                 </div>
                                 <button
                                     type="button"
-                                    aria-label="Marcar receita como recorrente"
+                                    aria-labelledby="recurring-option-title"
+                                    aria-describedby={type === 'expense' ? 'transaction-options-note' : undefined}
                                     aria-pressed={isRecurring}
-                                    onClick={() => { const next = !isRecurring; setIsRecurring(next); if (next) setIsInstallment(false) }}                                    className={`relative min-h-11 w-12 rounded-full transition-all ${isRecurring ? 'bg-brand-success' : 'bg-white/10'}`}
+                                    onClick={() => { const next = !isRecurring; setIsRecurring(next); if (next) setIsInstallment(false) }}
+                                    className={`relative grid min-h-11 w-11 shrink-0 place-items-center rounded-full bg-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-success focus-visible:ring-offset-2 focus-visible:ring-offset-brand-nav sm:w-12 ${isRecurring ? 'sm:bg-brand-success' : 'sm:bg-white/10'}`}
                                 >
-                                    <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all shadow-xl ${isRecurring ? 'left-6' : 'left-1'}`} />
+                                    <span className={`relative h-5 w-9 rounded-full transition-colors sm:h-full sm:w-full ${isRecurring ? 'bg-brand-success sm:bg-brand-success' : 'bg-white/10 sm:bg-white/10'}`}>
+                                        <span className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-all sm:top-1 sm:h-5 sm:w-5 ${isRecurring ? 'translate-x-4 sm:left-6 sm:translate-x-0' : 'translate-x-0 sm:left-1'}`} />
+                                    </span>
                                 </button>
                             </div>
                         </div>
-                    )}
-                </div>
-            </div>
-
-            {type === 'expense' && (
-                <div className="bg-brand-nav p-5 rounded-[1.5rem] border border-white/5">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className={`p-2 rounded-xl transition-all ${isRecurring ? 'bg-brand-success text-black' : 'bg-white/5 text-brand-gray'}`}>
-                                <Repeat className="w-4 h-4" />
-                            </div>
-                            <p className="font-black text-white text-[9px] uppercase tracking-[0.2em] opacity-80">Despesa Recorrente?</p>
-                        </div>
-                        <button
-                            type="button"
-                            aria-label="Marcar despesa como recorrente"
-                            aria-pressed={isRecurring}
-                            onClick={() => { const next = !isRecurring; setIsRecurring(next); if (next) setIsInstallment(false) }}
-                            className={`relative min-h-11 w-12 rounded-full transition-all ${isRecurring ? 'bg-brand-success' : 'bg-white/10'}`}
-                        >
-                            <div className={`w-5 h-5 bg-white rounded-full absolute top-1 transition-all shadow-xl ${isRecurring ? 'left-6' : 'left-1'}`} />
-                        </button>
                     </div>
                 </div>
-            )}
+
             <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:gap-4 sm:pt-4">
                 <button
                     type="submit"

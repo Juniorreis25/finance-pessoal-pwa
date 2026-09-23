@@ -71,7 +71,7 @@ describe('TransactionForm - Business Rules for Dates', () => {
         fireEvent.change(screen.getByPlaceholderText(/0.00/i), { target: { value: '10000' } }) // 100.00
 
         // Activating installments
-        const toggle = screen.getByText(/Transação Parcelada\?/i).closest('div')?.parentElement?.querySelector('button')
+        const toggle = screen.getByRole('button', { name: 'Compra parcelada' })
         fireEvent.click(toggle!)
 
         // Check if installment quantity input appeared
@@ -131,7 +131,7 @@ describe('TransactionForm - Business Rules for Dates', () => {
         render(<TransactionForm initialData={initialData} />)
 
         // Enable installments
-        const toggle = screen.getByText(/Transação Parcelada\?/i).closest('div')?.parentElement?.querySelector('button')
+        const toggle = screen.getByRole('button', { name: 'Compra parcelada' })
         fireEvent.click(toggle!)
 
         expect(screen.getByLabelText(/QUANTIDADE DE PARCELAS/i)).toBeInTheDocument()
