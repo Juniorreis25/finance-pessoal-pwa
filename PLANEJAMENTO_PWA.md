@@ -641,7 +641,8 @@ Ao concluir qualquer frente:
 - O trilho visual dos interruptores foi reduzido no mobile, preservando alvos de toque de 44 × 44 px, foco visível e rótulos acessíveis. Campos de quantidade e resumo do parcelamento continuam condicionais.
 - Verificação visual local em 390 × 844 px e 1280 × 900 px, sem salvar transação; a renderização mobile ficou agrupada e a desktop manteve os cartões separados.
 - Testes: 83 aprovados em 22 arquivos; `npx tsc --noEmit` e `npm run build` aprovados; lint sem erros, com 4 avisos preexistentes; detector Impeccable sem apontamentos antes do último ajuste de divisor.
-- **Status:** ajuste pronto e validado; commit, push e deploy registrados após a publicação.
+- Validação de release: `098564c` (`fix: compact recurring options on mobile`) enviado à `main`; deployment Vercel `dpl_B53WXuW4thuqhMb8rkBgjhhfPAEX` concluído como `READY` e associado ao alias de produção. `/api/health` respondeu `200 {"status":"ok"}`.
+- **Status:** ajuste implementado, validado, versionado, enviado e publicado. Interações no iPhone físico continuam recomendadas para conferência de toque.
 
 ## 12. Evidências e referências
 
