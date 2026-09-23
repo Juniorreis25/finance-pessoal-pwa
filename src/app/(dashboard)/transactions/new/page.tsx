@@ -1,16 +1,12 @@
 'use client'
 
 import { TransactionForm } from '@/components/forms/TransactionForm'
+import { FormPageHeader } from '@/components/ui/FormPageHeader'
 
 export default function NewTransactionPage() {
     return (
-        <div className="max-w-xl mx-auto py-2 sm:py-4">
-            <div className="mb-6 px-4">
-                <h1 className="text-3xl font-extrabold text-white tracking-tighter uppercase mb-1 sm:text-4xl">
-                    Nova <span className="text-brand-accent">Transação</span>
-                </h1>
-                <p className="text-brand-gray text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Registro de Fluxo Financeiro</p>
-            </div>
+        <div className="mx-auto max-w-xl py-1 sm:py-6">
+            <FormPageHeader title="Nova transação" description="Registre uma receita ou despesa." />
 
             <TransactionForm />
         </div>

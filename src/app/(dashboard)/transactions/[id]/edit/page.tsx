@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useMemo, useState, use } from 'react'
 import { TransactionForm } from '@/components/forms/TransactionForm'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { isLocalDemoMode } from '@/lib/local-demo'
+import { FormPageHeader } from '@/components/ui/FormPageHeader'
 
 type Transaction = {
     id: string
@@ -22,7 +23,7 @@ export default function EditTransactionPage({ params }: { params: Promise<{ id: 
     const [transaction, setTransaction] = useState<Transaction | null>(null)
     const [loading, setLoading] = useState(true)
     const router = useRouter()
-    const supabase = createClient()
+    const supabase = useMemo(() => createClient(), [])
 
     useEffect(() => {
         async function fetchTransaction() {
@@ -46,16 +47,13 @@ export default function EditTransactionPage({ params }: { params: Promise<{ id: 
             setLoading(false)
         }
         fetchTransaction()
-    }, [id, router])
+    }, [id, router, supabase])
 
     if (loading) return <div className="p-8 text-center text-slate-500">Carregando...</div>
 
     return (
-        <div className="max-w-2xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Editar Transação</h1>
-                <p className="text-slate-500 dark:text-slate-400">Atualize os dados do lançamento para manter seus registros precisos.</p>
-            </div>
+        <div className="mx-auto max-w-2xl py-1 sm:py-6">
+            <FormPageHeader title="Editar transação" description="Atualize os dados deste lançamento." />
 
             {transaction && <TransactionForm initialData={transaction} />}
         </div>

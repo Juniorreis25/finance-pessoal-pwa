@@ -3,7 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Save, X, Calendar, DollarSign, Tag, FileText, ArrowDownCircle } from 'lucide-react'
+import { Loader2, Save, ArrowDownCircle } from 'lucide-react'
+import { FormPageHeader } from '@/components/ui/FormPageHeader'
 
 export default function NewRecurringExpensePage() {
     const router = useRouter()
@@ -89,15 +90,10 @@ export default function NewRecurringExpensePage() {
     const categories = ['Alimentação', 'Assinaturas', 'Educação', 'Empréstimo', 'Financiamento', 'Lazer', 'Moradia', 'Saúde', 'Transporte', 'Outros']
 
     return (
-        <div className="max-w-2xl mx-auto py-2 sm:py-8">
-            <div className="mb-10 px-4">
-                <h1 className="text-3xl font-extrabold text-white tracking-tighter uppercase mb-2 sm:text-4xl">
-                    Nova <span className="text-brand-accent">Recorrência</span>
-                </h1>
-                <p className="text-brand-gray text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Automação de Fluxo de Caixa</p>
-            </div>
+        <div className="mx-auto max-w-2xl py-1 sm:py-6">
+            <FormPageHeader title="Nova recorrência" description="Cadastre um ganho ou pagamento fixo mensal." />
 
-            <form onSubmit={handleSubmit} className="space-y-8 bg-brand-deep-sea p-4 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl border border-white/5 relative overflow-hidden">
+            <form onSubmit={handleSubmit} className="relative space-y-5 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-8 sm:rounded-3xl sm:p-8">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
                 {error && (
@@ -106,28 +102,28 @@ export default function NewRecurringExpensePage() {
                     </div>
                 )}
 
-                <div className="space-y-6 relative z-10 font-sans">
-                    <div className="bg-brand-nav p-5 sm:p-8 rounded-[2rem] border border-white/5">
-                        <label htmlFor="amount" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-3 opacity-60">
+                <div className="relative z-10 space-y-5 font-sans sm:space-y-6">
+                    <div className="rounded-xl border border-white/5 bg-brand-nav p-4 sm:rounded-2xl sm:p-6">
+                        <label htmlFor="amount" className="mb-2 block text-xs font-semibold text-brand-gray">
                             VALOR MENSAL (R$)
                         </label>
                         <input
                             id="amount"
                             name="amount"
+                            data-display-value="large"
                             type="text"
                             inputMode="numeric"
                             required
                             placeholder="R$ 0,00"
-                            className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-4xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-5xl"
+                            className="min-h-12 w-full bg-transparent p-0 text-3xl font-bold tracking-tight text-brand-accent placeholder:text-brand-accent/20 focus:ring-0 sm:text-4xl"
                             value={formData.amount}
                             onChange={handleAmountChange}
-                            autoFocus
                         />
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-5">
                         <div>
-                            <label htmlFor="description" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="description" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 DESCRIÇÃO
                             </label>
                             <input
@@ -135,7 +131,7 @@ export default function NewRecurringExpensePage() {
                                 name="description"
                                 required
                                 placeholder="Ex: Netflix, Aluguel, Academia"
-                                className="w-full px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white placeholder:text-brand-gray/30"
+                                className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors placeholder:text-brand-gray/50 focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                                 value={formData.description}
                                 onChange={handleChange}
                             />
@@ -143,7 +139,7 @@ export default function NewRecurringExpensePage() {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label htmlFor="category" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="category" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                     CATEGORIA
                                 </label>
                                 <div className="relative">
@@ -151,7 +147,7 @@ export default function NewRecurringExpensePage() {
                                         id="category"
                                         name="category"
                                         required
-                                        className="w-full px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white appearance-none cursor-pointer"
+                                        className="min-h-12 w-full appearance-none rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                                         value={formData.category}
                                         onChange={handleChange}
                                     >
@@ -167,7 +163,7 @@ export default function NewRecurringExpensePage() {
                             </div>
 
                             <div>
-                                <label htmlFor="day_of_month" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="day_of_month" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                     DIA DO VENCIMENTO
                                 </label>
                                 <input
@@ -179,7 +175,7 @@ export default function NewRecurringExpensePage() {
                                     max="31"
                                     required
                                     placeholder="05"
-                                    className="w-full px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white text-center"
+                                    className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-center text-white outline-none transition-colors focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                                     value={formData.day_of_month}
                                     onChange={handleChange}
                                 />
@@ -188,11 +184,11 @@ export default function NewRecurringExpensePage() {
                     </div>
                 </div>
 
-                <div className="pt-8">
+                <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:pt-4">
                     <button
                         type="submit"
                         disabled={loading}
-                        className="min-h-12 w-full flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                        className="min-h-12 w-full flex items-center justify-center gap-2 rounded-xl bg-brand-accent px-4 py-3 font-bold text-black transition-colors hover:bg-cyan-300 disabled:opacity-50 sm:flex-1 sm:rounded-2xl sm:uppercase sm:tracking-wide"
                     >
                         {loading ? (
                             <Loader2 className="animate-spin w-5 h-5" />
@@ -209,7 +205,7 @@ export default function NewRecurringExpensePage() {
                     <button
                         type="button"
                         onClick={() => router.back()}
-                        className="min-h-11 w-full mt-4 flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-brand-gray/50 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all"
+                        className="min-h-12 w-full flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:flex-1 sm:rounded-2xl"
                     >
                         Cancelar Operação
                     </button>

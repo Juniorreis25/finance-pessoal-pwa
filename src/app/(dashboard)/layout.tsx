@@ -16,15 +16,19 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
 import { LogoDiamond } from '@/components/ui/LogoDiamond'
+import { ACTIVITY_KEY, SessionIdleGuard } from '@/components/pwa/SessionIdleGuard'
+import { usePullToRefresh } from '@/hooks/usePullToRefresh'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const supabase = createClient()
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
     const pathname = usePathname()
     const router = useRouter()
+    const pullToRefresh = usePullToRefresh(() => window.location.reload())
 
     const handleLogout = async () => {
         await supabase.auth.signOut()
+        localStorage.removeItem(ACTIVITY_KEY)
         router.push('/login')
     }
 
@@ -38,6 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     return (
         <div className="min-h-[100dvh] bg-background flex text-foreground font-sans">
+            <SessionIdleGuard />
 
             {/* Mobile Sidebar Overlay */}
             {isSidebarOpen && (
@@ -114,7 +119,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-x-hidden overflow-y-auto p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:p-6 lg:p-8 lg:pb-8">
+                <div
+                    className="flex-1 overflow-x-hidden overflow-y-auto overscroll-y-contain p-4 pb-[calc(6rem+env(safe-area-inset-bottom))] sm:p-6 lg:p-8 lg:pb-8"
+                    onTouchStart={pullToRefresh.onTouchStart}
+                    onTouchMove={pullToRefresh.onTouchMove}
+                    onTouchEnd={pullToRefresh.onTouchEnd}
+                    onTouchCancel={pullToRefresh.onTouchCancel}
+                >
+                    <div className="overflow-hidden text-center text-xs font-semibold text-brand-accent transition-[height] duration-150 lg:hidden" style={{ height: pullToRefresh.pullDistance }} aria-live="polite">
+                        {pullToRefresh.pullDistance >= 72 ? 'Solte para atualizar' : 'Puxe para atualizar'}
+                    </div>
                     <div className="max-w-6xl mx-auto">
                         {children}
                     </div>

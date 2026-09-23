@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { LogoDiamond } from '@/components/ui/LogoDiamond'
 import { Loader2, Lock, Mail, LogIn, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import { ACTIVITY_KEY } from '@/components/pwa/SessionIdleGuard'
 
 export default function LoginPage() {
     const [email, setEmail] = useState('')
@@ -16,10 +17,13 @@ export default function LoginPage() {
     const [showResendConfirmation, setShowResendConfirmation] = useState(false)
     const [resendMessage, setResendMessage] = useState<string | null>(null)
     const [resendLoading, setResendLoading] = useState(false)
+    const [idleNotice, setIdleNotice] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
-        if (new URLSearchParams(window.location.search).get('error') === 'auth_callback') {
+        const params = new URLSearchParams(window.location.search)
+        if (params.get('reason') === 'inactive') setIdleNotice(true)
+        if (params.get('error') === 'auth_callback') {
             setError('O link de confirmação é inválido ou expirou. Solicite um novo email de confirmação.')
             setShowResendConfirmation(true)
         }
@@ -65,6 +69,7 @@ export default function LoginPage() {
             })
 
             if (error) throw error
+            localStorage.setItem(ACTIVITY_KEY, String(Date.now()))
             router.push('/dashboard')
             router.refresh()
         } catch (err: unknown) {
@@ -114,6 +119,11 @@ export default function LoginPage() {
                         </div>
 
                         {/* Error */}
+                        {idleNotice && (
+                            <div className="rounded-xl border border-brand-accent/20 bg-brand-accent/10 p-3 text-center text-xs text-brand-accent" role="status">
+                                Sua sessão foi encerrada após 30 segundos sem atividade. Entre novamente.
+                            </div>
+                        )}
                         {error && (
                             <div className="rounded-xl bg-rose-500/10 p-3 text-xs text-rose-400 text-center border border-rose-500/20 animate-in fade-in">
                                 {error}

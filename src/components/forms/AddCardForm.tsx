@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, CreditCard, Save } from 'lucide-react'
@@ -20,7 +20,7 @@ interface CardFormProps {
 
 export function CardForm({ initialData }: CardFormProps) {
     const router = useRouter()
-    const supabase = createClient()
+    const supabase = useMemo(() => createClient(), [])
     const [loading, setLoading] = useState(false)
 
     // Helper to format currency on init
@@ -127,20 +127,16 @@ export function CardForm({ initialData }: CardFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-8 bg-brand-deep-sea p-4 sm:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] shadow-2xl border border-white/5 max-w-2xl mx-auto relative overflow-hidden">
+        <form onSubmit={handleSubmit} className="relative mx-auto max-w-2xl space-y-5 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-8 sm:rounded-3xl sm:p-8">
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
-            <div className="flex items-center gap-4 mb-2">
-                <div className="p-3 bg-brand-accent/10 rounded-2xl">
-                    <CreditCard className="w-6 h-6 text-brand-accent" />
+            <div className="mb-1 flex items-center gap-3">
+                <div className="rounded-xl bg-brand-accent/10 p-2.5">
+                    <CreditCard className="h-5 w-5 text-brand-accent" />
                 </div>
                 <div>
-                    <h2 className="text-xl font-black text-white uppercase tracking-tighter">
-                        {initialData ? 'Editar Cartão' : 'Novo Cartão'}
-                    </h2>
-                    <p className="text-[10px] text-brand-gray font-bold uppercase tracking-widest opacity-60">
-                        Gerencie seu limite e datas de fechamento
-                    </p>
+                    <h2 className="text-base font-semibold text-white">Dados do cartão</h2>
+                    <p className="text-xs text-brand-gray">Limite e datas de fechamento</p>
                 </div>
             </div>
 
@@ -150,44 +146,47 @@ export function CardForm({ initialData }: CardFormProps) {
                 </div>
             )}
 
-            <div className="space-y-6 relative z-10 font-sans">
+            <div className="relative z-10 space-y-5 font-sans sm:space-y-6">
                 <div>
-                    <label htmlFor="name" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                    <label htmlFor="name" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                         NOME DO CARTÃO
                     </label>
                     <input
+                        id="name"
                         name="name"
                         required
                         placeholder="Ex: Nubank Black, Visa Infinite"
-                        className="w-full min-h-12 px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white placeholder:text-brand-gray/30"
+                        className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors placeholder:text-brand-gray/50 focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                         value={formData.name}
                         onChange={handleChange}
-                        autoFocus
                     />
                 </div>
 
-                    <div className="bg-brand-nav p-5 sm:p-8 rounded-[2rem] border border-white/5">
-                    <label className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-3 opacity-60">
+                    <div className="rounded-xl border border-white/5 bg-brand-nav p-4 sm:rounded-2xl sm:p-6">
+                    <label htmlFor="limit_amount" className="mb-2 block text-xs font-semibold text-brand-gray">
                         LIMITE DE CRÉDITO (R$)
                     </label>
                     <input
+                        id="limit_amount"
                         name="limit_amount"
+                        data-display-value="large"
                         type="text"
                         inputMode="numeric"
                         required
                         placeholder="R$ 0,00"
-                        className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-4xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-5xl"
+                        className="min-h-12 w-full bg-transparent p-0 text-3xl font-bold tracking-tight text-brand-accent placeholder:text-brand-accent/20 focus:ring-0 sm:text-4xl"
                         value={formData.limit_amount}
                         onChange={handleAmountChange}
                     />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
+                <div className="grid grid-cols-2 gap-3 sm:gap-5">
                     <div>
-                        <label htmlFor="closing_day" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                        <label htmlFor="closing_day" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                             DIA DO FECHAMENTO
                         </label>
                         <input
+                            id="closing_day"
                             name="closing_day"
                             type="number"
                             inputMode="numeric"
@@ -195,16 +194,17 @@ export function CardForm({ initialData }: CardFormProps) {
                             max="31"
                             required
                             placeholder="10"
-                            className="w-full min-h-12 px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white text-center"
+                            className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-3 py-3 text-center text-white outline-none transition-colors focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                             value={formData.closing_day}
                             onChange={handleChange}
                         />
                     </div>
                     <div>
-                        <label htmlFor="due_day" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                        <label htmlFor="due_day" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                             DIA DO VENCIMENTO
                         </label>
                         <input
+                            id="due_day"
                             name="due_day"
                             type="number"
                             inputMode="numeric"
@@ -212,7 +212,7 @@ export function CardForm({ initialData }: CardFormProps) {
                             max="31"
                             required
                             placeholder="17"
-                            className="w-full min-h-12 px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white text-center"
+                            className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-3 py-3 text-center text-white outline-none transition-colors focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                             value={formData.due_day}
                             onChange={handleChange}
                         />
@@ -220,11 +220,11 @@ export function CardForm({ initialData }: CardFormProps) {
                 </div>
             </div>
 
-            <div className="pt-8">
+            <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:pt-4">
                 <button
                     type="submit"
                     disabled={loading}
-                    className="min-h-12 w-full flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                    className="min-h-12 w-full flex items-center justify-center gap-2 rounded-xl bg-brand-accent px-4 py-3 font-bold text-black transition-colors hover:bg-cyan-300 disabled:opacity-50 sm:flex-1 sm:rounded-2xl sm:uppercase sm:tracking-wide"
                 >
                     {loading ? (
                         <Loader2 className="animate-spin w-5 h-5" />
@@ -241,7 +241,7 @@ export function CardForm({ initialData }: CardFormProps) {
                 <button
                     type="button"
                     onClick={() => router.back()}
-                    className="min-h-11 w-full mt-4 flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-brand-gray/50 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all"
+                    className="min-h-12 w-full flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:flex-1 sm:rounded-2xl"
                 >
                     Cancelar Operação
                 </button>

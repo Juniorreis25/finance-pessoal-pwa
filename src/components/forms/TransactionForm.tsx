@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, ArrowUpCircle, ArrowDownCircle, X, CalendarClock, Calculator, Repeat, Calendar } from 'lucide-react'
@@ -33,7 +33,7 @@ interface TransactionFormProps {
 
 export function TransactionForm({ initialData }: TransactionFormProps) {
     const router = useRouter()
-    const supabase = createClient()
+    const supabase = useMemo(() => createClient(), [])
     const [loading, setLoading] = useState(false)
     const [cards, setCards] = useState<Card[]>([])
 
@@ -275,15 +275,15 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
     const incomeCategories = ['Freelance', 'Investimentos', 'Salário', 'Outros']
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6 bg-brand-deep-sea p-4 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-2xl border border-white/5 max-w-xl mx-auto relative overflow-hidden">
+        <form onSubmit={handleSubmit} className="relative mx-auto max-w-xl space-y-5 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-6 sm:rounded-3xl sm:p-8">
             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
             {/* Type Toggle - Neo Style */}
-            <div className="flex gap-2 p-1.5 bg-brand-nav rounded-2xl max-w-md mx-auto border border-white/5">
+            <div className="mx-auto flex max-w-md gap-2 rounded-xl border border-white/5 bg-brand-nav p-1 sm:rounded-2xl sm:p-1.5">
                 <button
                     type="button"
                     onClick={() => setType('expense')}
-                    className={`min-h-11 flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${type === 'expense'
+                    className={`min-h-11 flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold transition-colors sm:rounded-xl sm:py-3 sm:font-black sm:uppercase sm:tracking-wide ${type === 'expense'
                         ? 'bg-[#FF3B6B] text-white shadow-lg shadow-[#FF3B6B]/20'
                         : 'text-brand-gray hover:text-white'
                         }`}
@@ -297,7 +297,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                         setType('income')
                         setIsInstallment(false)
                     }}
-                    className={`min-h-11 flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${type === 'income'
+                    className={`min-h-11 flex-1 flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-semibold transition-colors sm:rounded-xl sm:py-3 sm:font-black sm:uppercase sm:tracking-wide ${type === 'income'
                         ? 'bg-brand-success text-black shadow-lg shadow-brand-success/20'
                         : 'text-brand-gray hover:text-white'
                         }`}
@@ -313,14 +313,15 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                 </div>
             )}
 
-            <div className="space-y-6 relative z-10 font-sans">
-                <div className="bg-brand-nav p-5 sm:p-6 rounded-[1.5rem] border border-white/5">
-                    <label htmlFor="amount" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 opacity-60">
+            <div className="relative z-10 space-y-5 font-sans sm:space-y-6">
+                <div className="rounded-xl border border-white/5 bg-brand-nav p-4 sm:rounded-2xl sm:p-6">
+                    <label htmlFor="amount" className="mb-2 block text-xs font-semibold text-brand-gray">
                         VALOR TOTAL (R$)
                     </label>
                     <input
                         id="amount"
                         name="amount"
+                        data-display-value="large"
                         type="text"
                         inputMode="numeric"
                         required
@@ -328,13 +329,12 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                         className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-3xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-4xl"
                         value={formData.amount}
                         onChange={handleAmountChange}
-                        autoFocus
                     />
                 </div>
 
                 <div className="space-y-6">
                     <div>
-                        <label htmlFor="description" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                        <label htmlFor="description" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                             DESCRIÇÃO
                         </label>
                         <input
@@ -349,7 +349,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                     </div>
 
                     <div>
-                        <label htmlFor="category" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                        <label htmlFor="category" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                             CATEGORIA
                         </label>
                         <div className="relative">
@@ -374,7 +374,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
 
                     <div className={type === 'income' ? 'w-full' : 'grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6'}>
                         <div>
-                            <label htmlFor="date" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="date" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 {type === 'income' ? 'DATA' : 'DATA DA COMPRA'}
                             </label>
                             <div className="relative group/date">
@@ -395,7 +395,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                         </div>
                         {type === 'expense' && (
                             <div>
-                                <label htmlFor="first_installment_date" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                                <label htmlFor="first_installment_date" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                     DATA DA 1ª PARCELA
                                 </label>
                                 <div className="relative group/date">
@@ -418,7 +418,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
 
                     {type === 'expense' && (
                         <div>
-                            <label htmlFor="card_id" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="card_id" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 MÉTODO DE COMPRA
                             </label>
                             <div className="relative">
@@ -534,11 +534,11 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                     </div>
                 </div>
             )}
-            <div className="pt-8 flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:gap-4 sm:pt-4">
                 <button
                     type="submit"
                     disabled={loading}
-                    className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                    className="min-h-12 flex-1 flex items-center justify-center gap-2 rounded-xl bg-brand-accent px-4 py-3 font-bold text-black transition-colors hover:bg-cyan-300 disabled:opacity-50 sm:rounded-2xl sm:px-8 sm:py-4 sm:uppercase sm:tracking-wide"
                 >
                     {loading ? (
                         <Loader2 className="animate-spin w-5 h-5" />
@@ -554,7 +554,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                 <button
                     type="button"
                     onClick={() => router.push('/transactions')}
-                    className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-5 bg-white/5 text-brand-gray rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-white/10 hover:text-white transition-all border border-white/5"
+                    className="min-h-12 flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:rounded-2xl sm:px-8 sm:py-4"
                 >
                     <X className="w-4 h-4 italic" />
                     <span>Cancelar</span>

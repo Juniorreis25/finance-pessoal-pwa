@@ -614,6 +614,27 @@ Ao concluir qualquer frente:
 - Primeira publicação de produção: `dpl_67hwrnbaxngqKz9zyARr5ohSuKqw`, status `READY`, alias `https://finance-pessoal-pwa.vercel.app`. `/api/health` respondeu `200 {"status":"ok"}`; `/transactions` sem sessão redirecionou para `/login`, sem erros de console observados.
 - A checagem de toque e safe area no iPhone real continua recomendada. Nenhuma alteração de Supabase ou do projeto web original foi necessária.
 
+### Ajustes mobile em validação local — recorrentes, cartões e sessão
+
+- Recorrências e cartões receberam listas compactas no mobile, inclusive busca, ações e estados vazios. A apresentação de cartão agora mostra nome, situação, vencimento, fechamento e **limite cadastrado** sem recorte; não há cálculo de limite bancário disponível no modelo atual.
+- O conteúdo pode ser puxado para baixo a partir do topo para atualizar a página e recarregar os dados. O gesto tem indicação visual e limiar para evitar atualizações acidentais.
+- Com 30 segundos sem interação, o app solicita nova autenticação. O logout usa escopo local do Supabase, preservando as sessões em outros dispositivos; o prazo também é verificado ao retornar de segundo plano ou reabrir a página. Trata-se de controle de sessão no cliente, não de redução do prazo de validade dos JWTs emitidos pelo servidor.
+- Validação automatizada em 2026-09-22: 82 testes aprovados, `tsc` e build aprovados, lint sem erros e 15 avisos preexistentes fora dos arquivos alterados.
+- Navegador local em viewport de iPhone: recorrências reais, cartão real do usuário de teste e mensagem de sessão expirada conferidos sem cortes. O gesto de toque e o comportamento em PWA instalado ainda requerem validação no iPhone real.
+- **Status:** alterações locais não versionadas nem publicadas; aguardar validação do usuário antes de commit e deploy.
+
+### Padronização mobile das páginas de edição e formulários
+
+- Revisão de responsividade nas rotas de dashboard, transações, recorrências, cartões e perfil, além de login/cadastro e modal de recorrência. O layout principal de transações e recorrências já tinha adaptação mobile; os principais pontos pendentes estavam nos formulários de edição/criação, perfil, cadastro e modal.
+- Cabeçalhos de formulário agora compartilham hierarquia, tamanho e descrição; formulários de transação, cartão e recorrência usam espaçamento compacto, campos legíveis, botões de toque e composição adequada à largura do telefone.
+- No perfil, nome e mensagem de boas-vindas vêm antes da foto, que fica recolhida como ajuste opcional. O foco automático nos campos foi removido para impedir que o teclado abra sozinho ao navegar.
+- A regra de tamanho mínimo de 16 px para evitar zoom no Safari agora preserva o destaque dos campos de valores monetários.
+- O modal de recorrência usa área segura, rolagem interna, rótulo de diálogo e ações compatíveis com telas menores.
+- Evidências visuais do navegador mobile: `.audit/mobile-review/01-cartao-editar.png`, `02-transacao-editar.png`, `03-perfil.png` e `04-cadastro.png`. A rota de recorrência/modal foi revisada no código, mas não capturada: a conta de teste não tinha recorrências e a sessão expirou; nenhum dado foi criado ou alterado para contornar isso.
+- `impeccable detect` não apontou falhas visuais estáticas nos arquivos revistos. Em 2026-09-23, `npx tsc --noEmit`, 82 testes (22 arquivos) e `npm run build` passaram. `npm run lint` passou sem erros, com 4 avisos preexistentes em arquivos fora do escopo desta frente. `/api/health` respondeu `200 {"status":"ok"}`.
+- Relatório e sequência da auditoria: `.audit/mobile-review/README.md`.
+- **Status:** implementação e verificações automatizadas concluídas; disponível localmente para validação. Recomenda-se conferir interação/toque em iPhone real; sem commit ou deploy nesta etapa.
+
 ## 12. Evidências e referências
 
 - Repositório de origem: `https://github.com/Juniorreis25/Finance_pessoal.git`

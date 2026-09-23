@@ -65,16 +65,16 @@ export default function RegisterPage() {
     if (success) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
-                <div className="w-full max-w-sm space-y-6 rounded-2xl bg-slate-900 p-8 shadow-xl border border-slate-800 text-center">
-                    <div className="mx-auto w-12 h-12 bg-emerald-900/30 text-emerald-400 rounded-full flex items-center justify-center mb-4">
+                <div className="w-full max-w-sm space-y-5 rounded-2xl border border-white/10 bg-brand-deep-sea p-5 text-center shadow-xl sm:p-8">
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-success/10 text-brand-success">
                         <Mail className="w-6 h-6" />
                     </div>
-                    <h2 className="text-2xl font-bold text-white">Verifique seu email</h2>
+                    <h2 className="text-xl font-bold text-white sm:text-2xl">Verifique seu email</h2>
                     <p className="text-slate-400">
                         Enviamos um link de confirmação para <strong>{email}</strong>.
                     </p>
                     <div className="pt-4">
-                        <Link href="/login" className="text-brand-600 hover:text-brand-500 font-medium flex items-center justify-center gap-2">
+                        <Link href="/login" className="inline-flex min-h-11 items-center justify-center gap-2 font-semibold text-brand-accent hover:text-white">
                             <ArrowLeft className="w-4 h-4" />
                             Voltar para o Login
                         </Link>
@@ -86,17 +86,17 @@ export default function RegisterPage() {
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-slate-950 p-4">
-            <div className="w-full max-w-sm space-y-6 rounded-2xl bg-slate-900 p-8 shadow-xl border border-slate-800">
+            <div className="w-full max-w-sm space-y-5 rounded-2xl border border-white/10 bg-brand-deep-sea p-5 shadow-xl sm:p-8">
                 <div className="text-center">
                     <div className="flex justify-center mb-6">
-                        <Logo className="w-12 h-12" textSize="text-3xl" />
+                        <Logo className="h-11 w-11" textSize="text-2xl" />
                     </div>
-                    <h1 className="text-3xl font-bold text-white">Crie sua Conta</h1>
+                    <h1 className="text-2xl font-bold text-white sm:text-3xl">Crie sua conta</h1>
                     <p className="mt-2 text-sm text-slate-400">Comece a controlar suas finanças hoje</p>
                 </div>
 
                 {error && (
-                    <div className="rounded-md bg-rose-500/10 p-3 text-sm text-rose-500 text-center border border-rose-500/20">
+                    <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-3 text-center text-sm text-rose-300">
                         {error}
                     </div>
                 )}
@@ -105,14 +105,14 @@ export default function RegisterPage() {
                     <div className="space-y-2">
                         <label htmlFor="email" className="text-sm font-medium text-slate-300">Email</label>
                         <div className="relative">
-                            <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                            <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-gray" />
                             <input
                                 id="email"
                                 type="email"
                                 placeholder="seu@email.com"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full rounded-xl border border-slate-800 bg-slate-950 py-2.5 pl-10 pr-4 text-base text-white outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 sm:text-sm"
+                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 py-3 pl-10 pr-4 text-base text-white outline-none transition-colors placeholder:text-brand-gray/60 focus:border-brand-accent/60 sm:text-sm"
                                 required
                             />
                         </div>
@@ -121,7 +121,7 @@ export default function RegisterPage() {
                     <div className="space-y-2">
                         <label htmlFor="password" className="text-sm font-medium text-slate-300">Senha</label>
                         <div className="relative">
-                            <Lock className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                            <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brand-gray" />
                             <input
                                 id="password"
                                 type="password"
@@ -129,7 +129,7 @@ export default function RegisterPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 minLength={6}
-                                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-base text-slate-900 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white transition-all sm:text-sm"
+                                className="w-full rounded-xl border border-white/10 bg-slate-950/60 py-3 pl-10 pr-4 text-base text-white outline-none transition-colors placeholder:text-brand-gray/60 focus:border-brand-accent/60 sm:text-sm"
                                 required
                             />
                         </div>
@@ -138,7 +138,7 @@ export default function RegisterPage() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="min-h-12 w-full rounded-xl bg-brand-600 py-3 font-bold text-white transition-all hover:bg-brand-500 hover:shadow-lg hover:shadow-brand-500/20 disabled:opacity-50 flex items-center justify-center gap-2 transform active:scale-95"
+                        className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-accent py-3 font-bold text-black transition-colors hover:bg-cyan-300 disabled:opacity-50"
                     >
                         {loading ? <Loader2 className="animate-spin h-5 w-5" /> : (
                             <>
@@ -152,7 +152,7 @@ export default function RegisterPage() {
                 <div className="text-center pt-2">
                     <p className="text-sm text-slate-500">
                         Já tem uma conta?{' '}
-                        <Link href="/login" className="text-brand-600 font-bold hover:underline">
+                            <Link href="/login" className="font-semibold text-brand-accent hover:underline">
                             Entrar
                         </Link>
                     </p>

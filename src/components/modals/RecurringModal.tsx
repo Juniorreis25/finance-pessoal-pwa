@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Loader2, Save, X, ArrowDownCircle } from 'lucide-react'
 import { appendLocalDemoRecurring, isLocalDemoMode } from '@/lib/local-demo'
@@ -12,7 +12,7 @@ interface RecurringModalProps {
 }
 
 export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalProps) {
-    const supabase = createClient()
+    const supabase = useMemo(() => createClient(), [])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
@@ -111,54 +111,58 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
     const categories = ['Alimentação', 'Assinaturas', 'Educação', 'Empréstimo', 'Financiamento', 'Lazer', 'Moradia', 'Saúde', 'Transporte', 'Outros']
 
     return (
-        <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center overflow-y-auto p-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-[calc(1rem+env(safe-area-inset-bottom))] bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/80 p-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md animate-in fade-in duration-300 sm:items-center sm:p-4">
             <div
-                className="bg-brand-deep-sea w-full max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-[1.5rem] sm:rounded-[2.5rem] border border-white/5 shadow-2xl relative animate-in zoom-in-95 duration-300"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="recurring-modal-title"
+                className="relative max-h-[calc(100dvh-2rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))] w-full max-w-lg overflow-y-auto rounded-2xl border border-white/10 bg-brand-deep-sea shadow-2xl animate-in zoom-in-95 duration-300 sm:rounded-3xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
-                <div className="p-5 sm:p-8 pb-4 flex justify-between items-center relative z-10">
+                <div className="relative z-10 flex items-center justify-between gap-3 px-4 pb-2 pt-4 sm:px-7 sm:pt-7">
                     <div>
-                        <h2 className="text-2xl font-black text-white tracking-tighter uppercase">Nova <span className="text-brand-accent">Recorrência</span></h2>
-                        <p className="text-brand-gray text-[9px] font-black uppercase tracking-widest opacity-60">Cadastrar Despesa Fixa</p>
+                        <h2 id="recurring-modal-title" className="text-xl font-bold tracking-tight text-white sm:text-2xl">Nova recorrência</h2>
+                        <p className="mt-1 text-sm text-brand-gray">Cadastrar despesa fixa</p>
                     </div>
                     <button
                         onClick={onClose}
-                        className="flex min-h-11 min-w-11 items-center justify-center p-2 hover:bg-white/5 rounded-full transition-colors text-brand-gray hover:text-white"
+                        aria-label="Fechar formulário"
+                        className="flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full p-2 text-brand-gray transition-colors hover:bg-white/5 hover:text-white"
                     >
                         <X className="w-6 h-6" />
                     </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="p-5 sm:p-8 pt-4 space-y-6 relative z-10 font-sans">
+                <form onSubmit={handleSubmit} className="relative z-10 space-y-5 px-4 pb-4 pt-2 font-sans sm:space-y-6 sm:px-7 sm:pb-7">
                     {error && (
                         <div className="bg-rose-500/10 text-rose-500 p-4 rounded-2xl text-[10px] font-black border border-rose-500/20 uppercase tracking-widest text-center">
                             {error}
                         </div>
                     )}
 
-                        <div className="bg-brand-nav p-5 sm:p-6 rounded-[1.5rem] border border-white/5">
-                        <label htmlFor="amount" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 opacity-60">
+                    <div className="rounded-xl border border-white/5 bg-brand-nav p-4 sm:rounded-2xl sm:p-6">
+                        <label htmlFor="amount" className="mb-2 block text-xs font-semibold text-brand-gray">
                             VALOR TOTAL (R$)
                         </label>
                         <input
                             id="amount"
                             name="amount"
+                            data-display-value="large"
                             type="text"
                             inputMode="numeric"
                             required
                             placeholder="R$ 0,00"
-                            className="w-full min-h-12 bg-transparent border-0 p-0 focus:ring-0 transition-all font-bold text-3xl text-brand-accent placeholder:text-brand-accent/10 tracking-tighter sm:text-4xl"
+                            className="min-h-12 w-full bg-transparent p-0 text-3xl font-bold tracking-tight text-brand-accent placeholder:text-brand-accent/20 focus:ring-0 sm:text-4xl"
                             value={formData.amount}
                             onChange={handleAmountChange}
-                            autoFocus
                         />
                     </div>
 
                     <div className="space-y-5">
                         <div>
-                            <label htmlFor="description" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="description" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 DESCRIÇÃO
                             </label>
                             <input
@@ -166,14 +170,14 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                                 name="description"
                                 required
                                 placeholder="Ex: Netflix, Internet, Aluguel"
-                                className="w-full min-h-12 px-5 py-3.5 bg-brand-nav border border-white/5 rounded-xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white placeholder:text-brand-gray/30"
+                                className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors placeholder:text-brand-gray/50 focus:border-brand-accent/50 sm:px-5"
                                 value={formData.description}
                                 onChange={handleChange}
                             />
                         </div>
 
                         <div>
-                            <label htmlFor="category" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="category" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 CATEGORIA
                             </label>
                             <div className="relative">
@@ -181,7 +185,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                                     id="category"
                                     name="category"
                                     required
-                                    className="w-full min-h-12 px-5 py-3.5 bg-brand-nav border border-white/5 rounded-xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white appearance-none cursor-pointer"
+                                    className="min-h-12 w-full appearance-none rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors focus:border-brand-accent/50 sm:px-5"
                                     value={formData.category}
                                     onChange={handleChange}
                                 >
@@ -197,7 +201,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                         </div>
 
                         <div>
-                            <label htmlFor="date" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="date" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 DATA
                             </label>
                             <div className="relative">
@@ -207,7 +211,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                                     type="date"
                                     inputMode="numeric"
                                     required
-                                    className="w-full min-h-12 px-5 py-3.5 bg-brand-nav border border-white/5 rounded-xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white [color-scheme:dark]"
+                                    className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors focus:border-brand-accent/50 [color-scheme:dark] sm:px-5"
                                     value={formData.date}
                                     onChange={handleChange}
                                 />
@@ -215,11 +219,11 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                         </div>
                     </div>
 
-                    <div className="pt-4 flex flex-col sm:flex-row gap-4">
+                    <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:gap-4 sm:pt-4">
                         <button
                             type="submit"
                             disabled={loading}
-                            className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-xs hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                            className="min-h-12 flex-1 flex items-center justify-center gap-2 rounded-xl bg-brand-accent px-4 py-3 font-bold text-black transition-colors hover:bg-cyan-300 disabled:opacity-50 sm:rounded-2xl sm:uppercase sm:tracking-wide"
                         >
                             {loading ? (
                                 <Loader2 className="animate-spin w-5 h-5" />
@@ -235,7 +239,7 @@ export function RecurringModal({ isOpen, onClose, onSuccess }: RecurringModalPro
                         <button
                             type="button"
                             onClick={onClose}
-                            className="min-h-12 flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-white/5 text-brand-gray rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-white/10 hover:text-white transition-all border border-white/5"
+                            className="min-h-12 flex-1 flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:rounded-2xl"
                         >
                             <X className="w-4 h-4" />
                             <span>Cancelar</span>

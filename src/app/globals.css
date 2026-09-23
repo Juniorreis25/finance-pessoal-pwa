@@ -90,6 +90,10 @@ a {
   textarea {
     font-size: 16px !important;
   }
+
+  input[data-display-value="large"] {
+    font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+  }
 }
 
 :focus-visible {

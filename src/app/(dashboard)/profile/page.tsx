@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Save, User, MessageSquare, Upload, X, Camera } from 'lucide-react'
+import { Loader2, Save, User, X, Camera, ChevronDown } from 'lucide-react'
 import Image from 'next/image'
+import { FormPageHeader } from '@/components/ui/FormPageHeader'
 
 type UserProfile = {
     display_name: string | null
@@ -14,7 +15,7 @@ type UserProfile = {
 
 export default function ProfilePage() {
     const router = useRouter()
-    const supabase = createClient()
+    const supabase = useMemo(() => createClient(), [])
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [uploading, setUploading] = useState(false)
@@ -58,7 +59,7 @@ export default function ProfilePage() {
             }
         }
         loadProfile()
-    }, [])
+    }, [supabase])
 
     const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0]
@@ -193,86 +194,29 @@ export default function ProfilePage() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto py-2 sm:py-8">
-            <div className="mb-10 px-4">
-                <h1 className="text-3xl font-extrabold text-white tracking-tighter uppercase mb-2 sm:text-4xl">
-                    Meu <span className="text-brand-accent">Perfil</span>
-                </h1>
-                <p className="text-brand-gray text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Personalização de Experiência</p>
-            </div>
+        <div className="mx-auto max-w-2xl py-1 sm:py-6">
+            <FormPageHeader title="Meu perfil" description="Personalize como sua conta aparece no aplicativo." />
 
-            <form onSubmit={handleSubmit} className="space-y-10 bg-brand-deep-sea p-10 rounded-[2.5rem] shadow-2xl border border-white/5 relative overflow-hidden">
+            <form onSubmit={handleSubmit} className="relative space-y-6 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-8 sm:rounded-3xl sm:p-8">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
 
                 {error && (
-                    <div className="bg-rose-500/10 text-rose-500 p-4 rounded-2xl text-[10px] font-black border border-rose-500/20 uppercase tracking-widest text-center">
+                    <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-3 text-sm text-rose-300 sm:rounded-2xl sm:p-4">
                         {error}
                     </div>
                 )}
 
                 {success && (
-                    <div className="bg-brand-success/10 text-brand-success p-4 rounded-2xl text-[10px] font-black border border-brand-success/20 uppercase tracking-widest text-center">
+                    <div className="rounded-xl border border-brand-success/20 bg-brand-success/10 p-3 text-sm text-brand-success sm:rounded-2xl sm:p-4">
                         ✓ Perfil atualizado com sucesso!
                     </div>
                 )}
 
-                <div className="space-y-8 relative z-10 font-sans">
-                    {/* Avatar Upload - Premium Style */}
-                    <div className="flex flex-col items-center gap-6">
-                        <div className="relative group">
-                            <div className="w-40 h-40 rounded-full p-1 bg-gradient-to-tr from-brand-accent/50 via-white/5 to-white/5 shadow-2xl">
-                                <div className="w-full h-full rounded-full overflow-hidden bg-brand-nav relative">
-                                    {avatarPreview ? (
-                                        <Image
-                                            src={avatarPreview}
-                                            alt="Avatar"
-                                            width={160}
-                                            height={160}
-                                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-brand-gray">
-                                            <User className="w-20 h-20 opacity-20" strokeWidth={1} />
-                                        </div>
-                                    )}
-                                    {uploading && (
-                                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                                            <Loader2 className="w-8 h-8 animate-spin text-brand-accent" />
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            {avatarPreview && (
-                                <button
-                                    type="button"
-                                    onClick={handleRemoveAvatar}
-                                    className="absolute top-2 right-2 flex min-h-11 min-w-11 items-center justify-center p-3 bg-white text-black rounded-full hover:scale-110 transition-all shadow-xl z-20"
-                                    title="Remover Foto"
-                                >
-                                    <X className="w-4 h-4" strokeWidth={3} />
-                                </button>
-                            )}
-                        </div>
-
-                        <label className="cursor-pointer group">
-                            <input
-                                type="file"
-                                accept="image/jpeg,image/png,image/webp"
-                                onChange={handleAvatarUpload}
-                                className="hidden"
-                                disabled={uploading}
-                            />
-                            <div className="flex items-center gap-3 px-8 py-4 bg-brand-nav border border-white/10 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] group-hover:bg-white group-hover:text-black transition-all">
-                                <Camera className="w-4 h-4" />
-                                {uploading ? 'Enviando...' : 'Alterar Avatar'}
-                            </div>
-                        </label>
-                    </div>
-
+                <div className="relative z-10 space-y-6 font-sans sm:space-y-8">
                     <div className="space-y-6">
                         {/* Display Name */}
                         <div>
-                            <label htmlFor="display_name" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="display_name" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 NOME DE EXIBIÇÃO
                             </label>
                             <input
@@ -280,7 +224,7 @@ export default function ProfilePage() {
                                 name="display_name"
                                 type="text"
                                 placeholder="Seu nome ou apelido"
-                                className="w-full px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white placeholder:text-brand-gray/30"
+                                className="min-h-12 w-full rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors placeholder:text-brand-gray/50 focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                                 value={formData.display_name || ''}
                                 onChange={handleChange}
                             />
@@ -288,7 +232,7 @@ export default function ProfilePage() {
 
                         {/* Welcome Message */}
                         <div>
-                            <label htmlFor="welcome_message" className="block text-[10px] font-black uppercase tracking-[0.2em] text-brand-gray mb-2 ml-1 opacity-60">
+                            <label htmlFor="welcome_message" className="mb-2 ml-1 block text-xs font-semibold text-brand-gray">
                                 MENSAGEM DE BOAS-VINDAS
                             </label>
                             <textarea
@@ -296,19 +240,53 @@ export default function ProfilePage() {
                                 name="welcome_message"
                                 rows={3}
                                 placeholder="Frase personalizada para o seu Dashboard"
-                                className="w-full px-5 py-4 bg-brand-nav border border-white/5 rounded-2xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white placeholder:text-brand-gray/30 resize-none"
+                                className="w-full resize-y rounded-xl border border-white/5 bg-brand-nav px-4 py-3 text-white outline-none transition-colors placeholder:text-brand-gray/50 focus:border-brand-accent/50 sm:rounded-2xl sm:px-5"
                                 value={formData.welcome_message || ''}
                                 onChange={handleChange}
                             />
                         </div>
                     </div>
+
+                    <details className="group rounded-xl border border-white/5 bg-brand-nav/40 p-3 sm:rounded-2xl sm:p-4">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 text-sm font-semibold text-slate-200 [&::-webkit-details-marker]:hidden">
+                            <span>Foto do perfil <span className="ml-1 font-normal text-brand-gray">· opcional</span></span>
+                            <ChevronDown className="h-4 w-4 shrink-0 text-brand-gray transition-transform group-open:rotate-180" />
+                        </summary>
+                        <div className="flex flex-wrap items-center gap-4 pt-3">
+                            <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-brand-nav ring-1 ring-white/10 sm:h-20 sm:w-20">
+                                {avatarPreview ? (
+                                    <Image src={avatarPreview} alt="Foto do perfil" width={80} height={80} className="h-full w-full object-cover" />
+                                ) : (
+                                    <div className="flex h-full w-full items-center justify-center text-brand-gray">
+                                        <User className="h-9 w-9 opacity-40" strokeWidth={1} />
+                                    </div>
+                                )}
+                                {uploading && <div className="absolute inset-0 flex items-center justify-center bg-black/60"><Loader2 className="h-5 w-5 animate-spin text-brand-accent" /></div>}
+                            </div>
+                            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+                                <label className="group cursor-pointer">
+                                    <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleAvatarUpload} className="sr-only" disabled={uploading} />
+                                    <span className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-white/10 px-3 py-2 text-sm font-semibold text-slate-200 transition-colors group-hover:bg-white/5">
+                                        <Camera className="h-4 w-4" />
+                                        {uploading ? 'Enviando…' : 'Alterar foto'}
+                                    </span>
+                                </label>
+                                {avatarPreview && (
+                                    <button type="button" onClick={handleRemoveAvatar} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-medium text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-300">
+                                        <X className="h-4 w-4" />
+                                        Remover
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
                 <div className="pt-4">
                     <button
                         type="submit"
                         disabled={saving}
-                        className="w-full flex items-center justify-center gap-2 px-8 py-5 bg-brand-accent text-black rounded-2xl font-black uppercase tracking-widest text-sm hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_10px_30px_rgba(0,240,255,0.3)] disabled:opacity-50"
+                        className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-brand-accent px-4 py-3 font-bold text-black transition-colors hover:bg-cyan-300 disabled:opacity-50 sm:rounded-2xl sm:px-8 sm:py-4 sm:uppercase sm:tracking-wide"
                     >
                         {saving ? (
                             <Loader2 className="animate-spin w-5 h-5" />
@@ -325,7 +303,7 @@ export default function ProfilePage() {
                     <button
                         type="button"
                         onClick={() => router.back()}
-                        className="w-full mt-4 flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-brand-gray/50 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:text-white transition-all"
+                        className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:mt-3 sm:rounded-2xl"
                     >
                         Voltar ao Dashboard
                     </button>

@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useMemo, useState, use } from 'react'
 import { CardForm } from '@/components/forms/AddCardForm'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { FormPageHeader } from '@/components/ui/FormPageHeader'
 
 type Card = {
     id: string
@@ -19,7 +20,7 @@ export default function EditCardPage({ params }: { params: Promise<{ id: string 
     const [card, setCard] = useState<Card | null>(null)
     const [loading, setLoading] = useState(true)
     const router = useRouter()
-    const supabase = createClient()
+    const supabase = useMemo(() => createClient(), [])
 
     useEffect(() => {
         async function fetchCard() {
@@ -39,16 +40,13 @@ export default function EditCardPage({ params }: { params: Promise<{ id: string 
             setLoading(false)
         }
         fetchCard()
-    }, [id, router])
+    }, [id, router, supabase])
 
     if (loading) return <div className="p-8 text-center text-slate-500">Carregando...</div>
 
     return (
-        <div className="max-w-2xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Editar Cartão</h1>
-                <p className="text-slate-500 dark:text-slate-400">Atualize as informações do seu cartão para manter sua gestão financeira atualizada.</p>
-            </div>
+        <div className="mx-auto max-w-2xl py-1 sm:py-6">
+            <FormPageHeader title="Editar cartão" description="Atualize o limite e as datas do cartão." />
 
             {card && <CardForm initialData={card} />}
         </div>

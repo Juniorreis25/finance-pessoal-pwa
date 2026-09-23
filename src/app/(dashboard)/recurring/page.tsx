@@ -114,18 +114,18 @@ export default function RecurringExpensesPage() {
     const recurringBalance = totalRecurringIncome - totalRecurringExpense
 
     return (
-        <div className="space-y-6 max-w-5xl mx-auto sm:space-y-8">
+        <div className="space-y-4 max-w-5xl mx-auto sm:space-y-8">
             {/* Header */}
             {/* Header with Title and Global Action */}
-            <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="flex items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">Transações Recorrentes</h1>
-                    <p className="text-slate-400">Gerencie seus ganhos e pagamentos fixos mensais.</p>
+                    <h1 className="text-2xl font-bold text-white tracking-tight sm:text-3xl">Transações Recorrentes</h1>
+                    <p className="hidden text-slate-400 sm:block">Gerencie seus ganhos e pagamentos fixos mensais.</p>
                 </div>
 
                 <button
                     onClick={() => setIsModalOpen(true)}
-                    className="flex min-h-[52px] min-w-[52px] items-center justify-center self-end bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer sm:self-auto"
+                    className="flex min-h-11 min-w-11 shrink-0 items-center justify-center bg-gradient-to-br from-[#00F0FF] to-[#00A3FF] text-black rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_8px_20px_rgba(0,240,255,0.3)] cursor-pointer sm:min-h-[52px] sm:min-w-[52px]"
                     title="Nova Recorrência"
                 >
                     <Plus className="w-6 h-6" strokeWidth={3} />
@@ -134,7 +134,7 @@ export default function RecurringExpensesPage() {
 
             {/* Toolbar: Search */}
             <div className="flex flex-wrap gap-3 items-center">
-                <div className="relative flex-1 min-w-[300px]">
+                <div className="relative min-w-0 flex-1">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-gray" />
                     <label htmlFor="search-recurring" className="sr-only">Buscar por descrição</label>
                     <input
@@ -156,8 +156,23 @@ export default function RecurringExpensesPage() {
                 }}
             />
 
+            <div className="rounded-2xl border border-white/5 bg-brand-deep-sea px-4 py-3 sm:hidden">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                        <p className="text-xs text-slate-400">Saldo mensal previsto</p>
+                        <p className={`truncate text-xl font-bold ${recurringBalance >= 0 ? 'text-brand-accent' : 'text-rose-400'}`}>
+                            <MaskedValue value={Math.abs(recurringBalance)} prefix={isValuesVisible ? (recurringBalance >= 0 ? 'R$ ' : '− R$ ') : ''} />
+                        </p>
+                    </div>
+                    <button type="button" onClick={toggleVisibility} className="min-h-11 rounded-xl px-2 text-sm text-brand-accent" aria-label={isValuesVisible ? 'Ocultar valores' : 'Mostrar valores'}>
+                        {isValuesVisible ? 'Ocultar' : 'Mostrar'}
+                    </button>
+                </div>
+                <p className="mt-1 text-xs text-slate-400">{filteredExpenses.length} recorrências · {filteredExpenses.filter(item => item.active).length} ativas</p>
+            </div>
+
             {/* Master Summary Card - Standardized Minimal Layout */}
-            <div className="relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="relative hidden overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:block sm:rounded-[2.5rem] sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                 {/* Background decorative elements */}
                 <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-success/5 blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
@@ -222,7 +237,7 @@ export default function RecurringExpensesPage() {
             </div>
 
             {/* List */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
                 {loading ? (
                     <div className="p-12 text-center text-slate-500 flex justify-center">
                         <div className="animate-pulse flex flex-col gap-2">
@@ -230,38 +245,38 @@ export default function RecurringExpensesPage() {
                         </div>
                     </div>
                 ) : filteredExpenses.length > 0 ? (
-                    <div className="grid gap-4">
+                    <div className="grid gap-3 sm:gap-4">
                         {filteredExpenses.map((expense) => (
                             <div
                                 key={expense.id}
-                                className={`relative group bg-slate-900 p-4 sm:p-5 rounded-2xl flex flex-col items-start justify-between gap-4 border ${!expense.active ? 'border-dashed border-slate-700 opacity-70' : 'border-slate-800'} shadow-sm hover:shadow-md transition-all sm:flex-row sm:items-center`}
+                                className={`relative group bg-brand-deep-sea p-3 sm:p-5 rounded-2xl flex flex-col items-start justify-between gap-2 sm:gap-4 border ${!expense.active ? 'border-dashed border-slate-700 opacity-70' : 'border-white/10'} shadow-sm hover:shadow-md transition-all sm:flex-row sm:items-center`}
                             >
-                                <div className="flex min-w-0 items-center gap-4 sm:gap-5">
-                                    <div className={`p-3 rounded-full ${expense.type === 'income' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'} ${!expense.active ? 'grayscale opacity-50' : ''}`}>
-                                        <Repeat className="w-6 h-6" />
+                                <div className="flex w-full min-w-0 items-center gap-3 sm:w-auto sm:gap-5">
+                                    <div className={`shrink-0 rounded-xl p-2 sm:p-3 ${expense.type === 'income' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-brand-accent/10 text-brand-accent'} ${!expense.active ? 'grayscale opacity-50' : ''}`}>
+                                        <Repeat className="h-4 w-4 sm:h-6 sm:w-6" />
                                     </div>
-                                    <div>
-                                        <h3 className="font-bold text-white text-lg">{expense.description}</h3>
-                                        <div className="flex items-center gap-3 mt-1">
+                                    <div className="min-w-0 flex-1">
+                                        <h3 className="break-words text-sm font-bold leading-snug text-white sm:text-lg">{expense.description}</h3>
+                                        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 sm:gap-3">
                                             <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-md border ${expense.type === 'income' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : 'bg-rose-500/10 text-rose-500 border-rose-500/10'}`}>
                                                 {expense.type === 'income' ? 'Receita' : 'Despesa'}
                                             </span>
-                                            <span className="text-xs font-medium px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
+                                            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700 sm:px-2.5">
                                                 {expense.category}
                                             </span>
-                                            <span className="text-sm text-slate-400 font-medium whitespace-nowrap">
+                                            <span className="text-xs text-slate-400 font-medium whitespace-nowrap sm:text-sm">
                                                 Dia {expense.day_of_month}
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="flex w-full items-center justify-between gap-4 sm:w-auto sm:gap-8">
-                                    <span className={`text-xl font-bold tracking-tight ${expense.type === 'income' ? 'text-emerald-500' : 'text-white'}`}>
-                                        {expense.type === 'income' ? '+' : '-'} R$ {expense.amount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                                <div className="flex w-full items-center justify-between gap-1 border-t border-white/5 pt-1 sm:w-auto sm:gap-8 sm:border-0 sm:pt-0">
+                                    <span className={`min-w-0 break-all text-base font-bold tracking-tight sm:text-xl ${expense.type === 'income' ? 'text-emerald-500' : 'text-white'}`}>
+                                        <MaskedValue value={expense.amount} prefix={expense.type === 'income' ? '+ R$ ' : '− R$ '} />
                                     </span>
 
-                                    <div className="flex gap-2">
+                                    <div className="flex shrink-0 gap-0.5 sm:gap-2">
                                         <button
                                             onClick={() => toggleStatus(expense.id, expense.active)}
                                             className={`flex min-h-11 min-w-11 items-center justify-center p-2 rounded-lg transition-colors ${expense.active ? 'text-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
@@ -281,9 +296,9 @@ export default function RecurringExpensesPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="p-16 text-center flex flex-col items-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 border-dashed">
-                        <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-full mb-4">
-                            <Repeat className="w-8 h-8 text-slate-400" />
+                    <div className="flex flex-col items-center rounded-2xl border border-dashed border-white/10 bg-brand-deep-sea p-6 text-center sm:rounded-3xl sm:p-16">
+                        <div className="mb-4 rounded-full bg-white/5 p-3 sm:p-4">
+                            <Repeat className="h-6 w-6 text-slate-400 sm:h-8 sm:w-8" />
                         </div>
                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Sem transações recorrentes</h3>
                         <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-sm mx-auto">
