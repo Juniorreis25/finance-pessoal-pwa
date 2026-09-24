@@ -25,6 +25,7 @@ type TransactionData = {
     installment_number?: number | null
     total_installments?: number | null
     purchase_date?: string | null
+    installment_total_amount?: number
 }
 
 interface TransactionFormProps {
@@ -41,6 +42,8 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
     const [isInstallment, setIsInstallment] = useState(!!initialData?.installment_id)
     const [isRecurring, setIsRecurring] = useState(false)
     const [installments, setInstallments] = useState(initialData?.total_installments || 2)
+    const isEditing = Boolean(initialData?.id)
+    const isEditingInstallmentSeries = Boolean(initialData?.installment_id)
 
     // Helper to format currency on init
     const formatCurrency = (value: number | string) => {
@@ -141,6 +144,10 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
         try {
             const amountValue = parseCurrency(formData.amount)
             const dayOfMonth = parseISO(formData.date).getDate()
+            if (!Number.isFinite(amountValue) || amountValue <= 0) throw new Error('Informe um valor maior que zero.')
+            if (isInstallment && (!Number.isInteger(installments) || installments < 2 || installments > 48)) {
+                throw new Error('A quantidade de parcelas deve estar entre 2 e 48.')
+            }
 
             if (isLocalDemoMode) {
                 if (isRecurring) {
@@ -187,6 +194,27 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
 
             const { data: { user } } = await supabase.auth.getUser()
             if (!user) throw new Error('Sessão expirada. Entre novamente para salvar a transação.')
+
+            if (isEditingInstallmentSeries && initialData?.installment_id) {
+                const { data: updatedCount, error: updateError } = await supabase.rpc('update_installment_series', {
+                    p_user_id: user.id,
+                    p_installment_id: initialData.installment_id,
+                    p_description: formData.description,
+                    p_amount: amountValue,
+                    p_category: formData.category,
+                    p_first_installment_date: formData.first_installment_date,
+                    p_card_id: formData.card_id || null,
+                    p_purchase_date: formData.date,
+                })
+
+                if (updateError) throw new Error(`Erro ao atualizar a série: ${updateError.message}`)
+                if (updatedCount !== initialData.total_installments) {
+                    throw new Error('Não foi possível confirmar a atualização de todas as parcelas. Recarregue a página e tente novamente.')
+                }
+                router.push('/transactions')
+                router.refresh()
+                return
+            }
 
             if (isRecurring) {
                 const { error: insertError } = await supabase
@@ -275,11 +303,10 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
     const incomeCategories = ['Freelance', 'Investimentos', 'Salário', 'Outros']
 
     return (
-        <form onSubmit={handleSubmit} className="relative mx-auto max-w-xl space-y-5 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-6 sm:rounded-3xl sm:p-8">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
+        <form onSubmit={handleSubmit} className="mx-auto max-w-xl space-y-5 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-6 sm:rounded-3xl sm:p-8">
 
             {/* Type Toggle - Neo Style */}
-            <div className="mx-auto flex max-w-md gap-2 rounded-xl border border-white/5 bg-brand-nav p-1 sm:rounded-2xl sm:p-1.5">
+            {!isEditingInstallmentSeries && <div className="mx-auto flex max-w-md gap-2 rounded-xl border border-white/5 bg-brand-nav p-1 sm:rounded-2xl sm:p-1.5">
                 <button
                     type="button"
                     onClick={() => setType('expense')}
@@ -305,18 +332,24 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                     <ArrowUpCircle className="w-4 h-4" />
                     Receita
                 </button>
-            </div>
+            </div>}
+
+            {isEditingInstallmentSeries && (
+                <div className="rounded-xl border border-brand-accent/20 bg-brand-accent/5 px-4 py-3 text-sm leading-relaxed text-brand-accent">
+                    Editando a série completa: suas {initialData?.total_installments} parcelas serão atualizadas juntas.
+                </div>
+            )}
 
             {error && (
-                <div className="bg-rose-500/10 text-rose-500 p-4 rounded-2xl text-[10px] font-black border border-rose-500/20 uppercase tracking-widest text-center">
+                <div role="alert" className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm leading-relaxed text-rose-200">
                     {error}
                 </div>
             )}
 
             <div className="relative z-10 space-y-5 font-sans sm:space-y-6">
-                <div className="rounded-xl border border-white/5 bg-brand-nav p-4 sm:rounded-2xl sm:p-6">
+            <div className="rounded-xl border border-white/5 bg-brand-nav p-4 sm:rounded-2xl sm:p-6">
                     <label htmlFor="amount" className="mb-2 block text-xs font-semibold text-brand-gray">
-                        VALOR TOTAL (R$)
+                        {isEditingInstallmentSeries ? 'VALOR TOTAL DA SÉRIE (R$)' : 'VALOR TOTAL (R$)'}
                     </label>
                     <input
                         id="amount"
@@ -442,7 +475,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                     )}
                 </div>
 
-                    <div
+                    {!isEditing && <div
                         role="group"
                         aria-labelledby="transaction-options-title"
                         className="flex flex-col gap-0 rounded-2xl border border-white/5 bg-brand-nav px-4 sm:gap-5 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0"
@@ -484,7 +517,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                                 {isInstallment && (
                                     <div className="mt-3 border-t border-white/5 pt-3 animate-in fade-in slide-in-from-top-2 duration-300 sm:mt-4 sm:pt-4">
                                         <label htmlFor="installments" className="mb-2 block text-xs font-semibold text-brand-gray sm:text-[9px] sm:font-black sm:uppercase sm:tracking-[0.2em] sm:opacity-60">
-                                            Quantidade de parcelas
+                                            {isEditingInstallmentSeries ? 'Parcelas da série' : 'Quantidade de parcelas'}
                                         </label>
                                         <div className="relative">
                                             <input
@@ -494,6 +527,8 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                                                 min="2"
                                                 max="48"
                                                 required
+                                                disabled={isEditingInstallmentSeries}
+                                                aria-describedby={isEditingInstallmentSeries ? 'installment-count-note' : undefined}
                                                 className="w-full min-h-12 px-4 py-3 bg-brand-deep-sea border border-white/5 rounded-xl focus:border-brand-accent/50 outline-none transition-all font-bold text-white text-center"
                                                 value={installments}
                                                 onChange={(e) => setInstallments(parseInt(e.target.value))}
@@ -502,6 +537,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                                                 <Calculator className="w-4 h-4 opacity-30" />
                                             </div>
                                         </div>
+                                        {isEditingInstallmentSeries && <p id="installment-count-note" className="mt-2 text-xs leading-relaxed text-brand-gray">A quantidade de parcelas é mantida para preservar a estrutura da série.</p>}
                                         {installmentSummary && (
                                             <p className="mt-3 text-xs font-semibold text-brand-accent/80 text-center sm:text-[9px] sm:font-bold sm:text-brand-accent/60 sm:uppercase sm:tracking-widest">
                                                 {installments}x de {installmentSummary.monthlyValue} • Final em {installmentSummary.lastDate}
@@ -536,7 +572,7 @@ export function TransactionForm({ initialData }: TransactionFormProps) {
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </div>}
                 </div>
 
             <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:gap-4 sm:pt-4">

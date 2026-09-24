@@ -118,7 +118,7 @@ describe('TransactionForm - Business Rules for Dates', () => {
         expect(installmentInput).toHaveValue('2026-02-14')
     })
 
-    it('Scenario 3: Converting existing single transaction to installments', async () => {
+    it('does not offer series-creation switches while editing a single transaction', async () => {
         const initialData = {
             id: 'old-tx-id',
             description: 'Simple Tx',
@@ -130,21 +130,10 @@ describe('TransactionForm - Business Rules for Dates', () => {
 
         render(<TransactionForm initialData={initialData} />)
 
-        // Enable installments
-        const toggle = screen.getByRole('button', { name: 'Compra parcelada' })
-        fireEvent.click(toggle!)
-
-        expect(screen.getByLabelText(/QUANTIDADE DE PARCELAS/i)).toBeInTheDocument()
-
-        // Submit
-        fireEvent.click(screen.getByText(/Salvar Transação/i))
-
-        await waitFor(() => {
-            // Should delete existing single record
-            expect(deleteMock).toHaveBeenCalled()
-            // Should call RPC to create series
-            expect(rpcMock).toHaveBeenCalled()
-        })
+        expect(screen.queryByRole('button', { name: 'Compra parcelada' })).not.toBeInTheDocument()
+        expect(screen.queryByRole('button', { name: 'Despesa recorrente' })).not.toBeInTheDocument()
+        expect(deleteMock).not.toHaveBeenCalled()
+        expect(rpcMock).not.toHaveBeenCalled()
     })
 
     it('Scenario 4: Recovering separate dates during edit', () => {
@@ -166,5 +155,45 @@ describe('TransactionForm - Business Rules for Dates', () => {
 
         expect(purchaseInput).toHaveValue('2026-02-12')
         expect(installmentInput).toHaveValue('2026-03-05')
+    })
+
+    it('updates the complete installment series atomically', async () => {
+        const initialData = {
+            id: 'installment-1',
+            description: 'Compra Teste',
+            amount: 240,
+            category: 'Lazer',
+            date: '2026-04-01',
+            purchase_date: '2026-03-01',
+            type: 'expense' as const,
+            installment_id: 'series-123',
+            installment_number: 1,
+            total_installments: 3,
+        }
+
+        render(<TransactionForm initialData={initialData} />)
+
+        expect(screen.getByText(/série completa/i)).toHaveTextContent('3 parcelas')
+        expect(screen.getByLabelText(/VALOR TOTAL DA SÉRIE/i)).toHaveDisplayValue(/240,00/)
+        expect(screen.queryByRole('button', { name: 'Despesa recorrente' })).not.toBeInTheDocument()
+
+        fireEvent.change(screen.getByPlaceholderText(/Ex: Supermercado/i), { target: { value: 'Nova descrição' } })
+        fireEvent.change(screen.getByLabelText(/CATEGORIA/i), { target: { value: 'Educação' } })
+        fireEvent.change(screen.getByLabelText(/VALOR TOTAL DA SÉRIE/i), { target: { value: '30000' } })
+        fireEvent.click(screen.getByText(/Salvar Transação/i))
+
+        await waitFor(() => {
+            expect(rpcMock).toHaveBeenCalledWith('update_installment_series', {
+                p_user_id: 'user123',
+                p_installment_id: 'series-123',
+                p_description: 'Nova descrição',
+                p_amount: 300,
+                p_category: 'Educação',
+                p_first_installment_date: '2026-04-01',
+                p_card_id: null,
+                p_purchase_date: '2026-03-01',
+            })
+            expect(deleteMock).not.toHaveBeenCalled()
+        })
     })
 })

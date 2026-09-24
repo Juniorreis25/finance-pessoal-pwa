@@ -13,6 +13,7 @@ export default function EditRecurringExpensePage() {
     const supabase = useMemo(() => createClient(), [])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [loadError, setLoadError] = useState<string | null>(null)
     const [initialLoading, setInitialLoading] = useState(true)
 
     const [formData, setFormData] = useState({
@@ -37,17 +38,19 @@ export default function EditRecurringExpensePage() {
                         category: expense.category,
                         day_of_month: expense.day_of_month.toString(),
                     })
-                }
+                } else setLoadError('Esta recorrência não foi encontrada.')
                 setInitialLoading(false)
                 return
             }
-            const { data } = await supabase
+            const { data, error: fetchError } = await supabase
                 .from('recurring_expenses')
                 .select('*')
                 .eq('id', params.id)
                 .single()
 
-            if (data) {
+            if (fetchError || !data) {
+                setLoadError('Não foi possível carregar esta recorrência. Volte à lista e tente novamente.')
+            } else {
                 setFormData({
                     description: data.description,
                     amount: formatCurrency(data.amount),
@@ -57,7 +60,10 @@ export default function EditRecurringExpensePage() {
             }
             setInitialLoading(false)
         }
-        loadExpense()
+        loadExpense().catch(() => {
+            setLoadError('Não foi possível carregar esta recorrência. Volte à lista e tente novamente.')
+            setInitialLoading(false)
+        })
     }, [params.id, supabase])
 
     const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,21 +144,22 @@ export default function EditRecurringExpensePage() {
 
     if (initialLoading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-8 h-8 animate-spin text-brand-500" />
+            <div role="status" className="flex min-h-48 items-center justify-center gap-3 text-sm text-brand-gray">
+                <Loader2 className="h-5 w-5 animate-spin text-brand-accent" /> Carregando recorrência…
             </div>
         )
     }
 
+    if (loadError) return <div className="mx-auto max-w-xl py-4"><div role="alert" className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm leading-relaxed text-rose-200">{loadError}</div><button type="button" onClick={() => router.push('/recurring')} className="mt-3 min-h-11 rounded-xl px-4 text-sm font-semibold text-brand-accent underline underline-offset-4">Voltar às recorrências</button></div>
+
     return (
-        <div className="mx-auto max-w-2xl py-1 sm:py-6">
+        <div className="mx-auto max-w-xl py-1 sm:py-6">
             <FormPageHeader title="Editar recorrência" description="Atualize o valor, a categoria e o vencimento." />
 
-            <form onSubmit={handleSubmit} className="relative space-y-5 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-8 sm:rounded-3xl sm:p-8">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
+            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-7 sm:rounded-3xl sm:p-8">
 
                 {error && (
-                    <div className="bg-rose-500/10 text-rose-500 p-4 rounded-2xl text-[10px] font-black border border-rose-500/20 uppercase tracking-widest text-center">
+                    <div role="alert" className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm leading-relaxed text-rose-200">
                         {error}
                     </div>
                 )}
@@ -259,7 +266,7 @@ export default function EditRecurringExpensePage() {
 
                     <button
                         type="button"
-                        onClick={() => router.back()}
+                        onClick={() => router.push('/recurring')}
                         className="min-h-12 w-full flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:flex-1 sm:rounded-2xl"
                     >
                         Cancelar Edição

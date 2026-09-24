@@ -19,6 +19,7 @@ export default function EditCardPage({ params }: { params: Promise<{ id: string 
     const { id } = use(params)
     const [card, setCard] = useState<Card | null>(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     const supabase = useMemo(() => createClient(), [])
 
@@ -30,24 +31,28 @@ export default function EditCardPage({ params }: { params: Promise<{ id: string 
                 .eq('id', id)
                 .single()
 
-            if (error) {
-                console.error('Error fetching card:', error)
-                router.push('/cards')
+            if (error || !data) {
+                setError('Não foi possível carregar este cartão. Volte à lista e tente novamente.')
+                setLoading(false)
                 return
             }
 
             setCard(data)
             setLoading(false)
         }
-        fetchCard()
+        fetchCard().catch(() => {
+            setError('Não foi possível carregar este cartão. Volte à lista e tente novamente.')
+            setLoading(false)
+        })
     }, [id, router, supabase])
 
-    if (loading) return <div className="p-8 text-center text-slate-500">Carregando...</div>
+    if (loading) return <div role="status" className="flex min-h-48 items-center justify-center text-sm text-brand-gray">Carregando cartão…</div>
 
     return (
-        <div className="mx-auto max-w-2xl py-1 sm:py-6">
+        <div className="mx-auto max-w-xl py-1 sm:py-6">
             <FormPageHeader title="Editar cartão" description="Atualize o limite e as datas do cartão." />
 
+            {error && <div role="alert" className="mb-4 rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm leading-relaxed text-rose-200">{error}<button type="button" className="ml-2 min-h-11 font-semibold underline underline-offset-4" onClick={() => router.push('/cards')}>Voltar aos cartões</button></div>}
             {card && <CardForm initialData={card} />}
         </div>
     )

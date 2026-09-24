@@ -6,7 +6,7 @@
 
 **Atualizado em:** 2026-09-24
 **Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento. P5 foi explicitamente adiada.
-**Próxima frente:** validar visualmente os novos gráficos do dashboard em produção no navegador autenticado em viewport iPhone; depois confirmar os fluxos essenciais em aparelho real. Exportações e avatar ficam fora da prioridade do MVP atual.
+**Próxima frente:** após o deploy, validar o fluxo de edição da série com conta de teste e conferir os formulários em viewport iPhone. O usuário informou que aplicou manualmente a migration no Supabase compartilhado; a existência da função ainda não foi verificada independentemente. Exportações e avatar ficam fora da prioridade do MVP atual.
 
 ### Frentes concluídas
 
@@ -37,6 +37,7 @@
 - [ ] Adaptar a experiência para iPhone.
 - [ ] Validar autenticação, RLS, Storage e exportações.
 - [ ] Executar validação local completa.
+- [ ] Confirmar o fluxo de edição da série em produção com conta de teste e validar a função aplicada manualmente ao Supabase (informação fornecida pelo usuário).
 - [x] Obter aprovação explícita para commit, push e deploy; autorização foi concedida e o deployment independente foi executado.
 
 ## 2. Objetivo
@@ -613,6 +614,7 @@ Ao concluir qualquer frente:
 | 2026-09-22 | Priorizar funcionalidade e compatibilidade mobile no iPhone | Uso familiar depende primeiro de fluxos essenciais estáveis no dispositivo | Exportações e avatar foram adiados para depois do MVP mobile |
 | 2026-09-22 | Exibir dois meses na linha do tempo de Transações | Facilita identificar o corte do mês sem trocar de tela | Resumo e exportação continuam restritos ao mês em foco; commit `3bd0f65` e deployment de produção `dpl_3u3os68hRAdeSca7GPF9GFYwrKdb` publicados |
 | 2026-09-22 | Agrupar transações por dia em um único balão no mobile, mantendo cartões no desktop | Reduz rolagem e melhora a leitura do extrato no iPhone | Paginação mobile por dias inteiros; cabeçalho mensal preservado; não exibir saldo diário sem dados para calculá-lo; validação local antes de commit/deploy |
+| 2026-09-24 | Ao editar uma transação parcelada, alterar a série inteira em uma operação atômica | Evita divergência entre parcelas e perda acidental de uma parte da série | Migration `update_installment_series` criada no repositório; usuário informou que a aplicou manualmente no Supabase. Confirmar a função e o fluxo com conta de teste após o deploy |
 
 ### Validação local da linha do tempo mobile
 
@@ -656,6 +658,16 @@ Ao concluir qualquer frente:
 - Testes: 83 aprovados em 22 arquivos; `npx tsc --noEmit` e `npm run build` aprovados; lint sem erros, com 4 avisos preexistentes; detector Impeccable sem apontamentos antes do último ajuste de divisor.
 - Validação de release: `098564c` (`fix: compact recurring options on mobile`) enviado à `main`; deployment Vercel `dpl_B53WXuW4thuqhMb8rkBgjhhfPAEX` concluído como `READY` e associado ao alias de produção. `/api/health` respondeu `200 {"status":"ok"}`.
 - **Status:** ajuste implementado, validado, versionado, enviado e publicado. Interações no iPhone físico continuam recomendadas para conferência de toque.
+
+### Padronização das edições e alteração integral de série parcelada — validação local
+
+- A edição de uma parcela agora carrega e apresenta o total da série, a descrição-base e a primeira data; salvar atualiza valor total, categoria, cartão, descrição, compra e calendário de vencimentos para todas as parcelas.
+- A quantidade da série permanece fixa nesta operação para preservar sua estrutura; o formulário identifica explicitamente que a alteração afeta todas as parcelas. Os controles de criação de parcelas/recorrência ficam fora das telas de edição para impedir conversões destrutivas acidentais.
+- A migration `supabase/migrations/20260924160234_update_installment_series.sql` cria função `SECURITY INVOKER`, valida propriedade via `auth.uid()`, valida integridade e quantidade da série, bloqueia as linhas durante a atualização e limita EXECUTE a `authenticated`. O usuário informou que a aplicou manualmente ao projeto Supabase; sem inspeção direta ou teste autenticado, esse estado é registrado como informação fornecida, não como verificação independente.
+- Formulários de cartão, recorrência, transação e perfil receberam ajustes de largura/ritmo mobile, mensagens acessíveis, estado de carregamento/erro e destinos previsíveis de cancelar. Cartão valida limite e dias antes de salvar.
+- `npm test`: 91 testes aprovados em 23 arquivos, incluindo a atualização da série; `npm run build`: aprovado; `npm run lint`: sem erros e 4 avisos preexistentes fora dos arquivos desta frente; `git diff --check`: aprovado.
+- O detector estático Impeccable não emitiu apontamentos. O atalho `polish` não existe nesta versão do executável, então a confirmação visual final e validação em iPhone permanecem pendentes.
+- **Status:** código e validação automatizada concluídos localmente; migration aplicada manualmente conforme informação do usuário. Commit, push e deploy ainda pendentes; teste autenticado da edição da série permanece necessário.
 
 ## 12. Evidências e referências
 

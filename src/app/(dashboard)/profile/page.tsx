@@ -54,6 +54,7 @@ export default function ProfilePage() {
                 }
             } catch (err: unknown) {
                 console.error('Erro ao carregar perfil:', err)
+                setError('Não foi possível carregar os dados do perfil. Você ainda pode tentar novamente mais tarde.')
             } finally {
                 setLoading(false)
             }
@@ -187,8 +188,8 @@ export default function ProfilePage() {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="w-8 h-8 animate-spin text-brand-500" />
+            <div role="status" className="flex min-h-48 items-center justify-center gap-3 text-sm text-brand-gray">
+                <Loader2 className="h-5 w-5 animate-spin text-brand-accent" /> Carregando perfil…
             </div>
         )
     }
@@ -197,17 +198,16 @@ export default function ProfilePage() {
         <div className="mx-auto max-w-2xl py-1 sm:py-6">
             <FormPageHeader title="Meu perfil" description="Personalize como sua conta aparece no aplicativo." />
 
-            <form onSubmit={handleSubmit} className="relative space-y-6 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-8 sm:rounded-3xl sm:p-8">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
+            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-7 sm:rounded-3xl sm:p-8">
 
                 {error && (
-                    <div className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-3 text-sm text-rose-300 sm:rounded-2xl sm:p-4">
+                    <div role="alert" className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-3 text-sm leading-relaxed text-rose-200 sm:p-4">
                         {error}
                     </div>
                 )}
 
                 {success && (
-                    <div className="rounded-xl border border-brand-success/20 bg-brand-success/10 p-3 text-sm text-brand-success sm:rounded-2xl sm:p-4">
+                    <div role="status" className="rounded-xl border border-brand-success/20 bg-brand-success/10 p-3 text-sm leading-relaxed text-brand-success sm:p-4">
                         ✓ Perfil atualizado com sucesso!
                     </div>
                 )}
@@ -302,7 +302,7 @@ export default function ProfilePage() {
 
                     <button
                         type="button"
-                        onClick={() => router.back()}
+                        onClick={() => router.push('/dashboard')}
                         className="mt-2 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:mt-3 sm:rounded-2xl"
                     >
                         Voltar ao Dashboard

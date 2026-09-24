@@ -90,13 +90,19 @@ export function CardForm({ initialData }: CardFormProps) {
             if (!user) throw new Error('Sessão expirada. Entre novamente para salvar o cartão.')
 
             const limitValue = parseCurrency(String(formData.limit_amount))
+            const closingDay = Number(formData.closing_day)
+            const dueDay = Number(formData.due_day)
+            if (!Number.isFinite(limitValue) || limitValue <= 0) throw new Error('Informe um limite maior que zero.')
+            if (![closingDay, dueDay].every(day => Number.isInteger(day) && day >= 1 && day <= 31)) {
+                throw new Error('Os dias de fechamento e vencimento devem estar entre 1 e 31.')
+            }
 
             const payload = {
                 user_id: user.id,
                 name: formData.name,
                 limit_amount: limitValue,
-                closing_day: Number(formData.closing_day),
-                due_day: Number(formData.due_day),
+                closing_day: closingDay,
+                due_day: dueDay,
                 active: formData.active
             }
 
@@ -127,8 +133,7 @@ export function CardForm({ initialData }: CardFormProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit} className="relative mx-auto max-w-2xl space-y-5 overflow-hidden rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-8 sm:rounded-3xl sm:p-8">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-accent/5 blur-[80px] rounded-full pointer-events-none" />
+        <form onSubmit={handleSubmit} className="mx-auto max-w-xl space-y-5 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 sm:space-y-7 sm:rounded-3xl sm:p-8">
 
             <div className="mb-1 flex items-center gap-3">
                 <div className="rounded-xl bg-brand-accent/10 p-2.5">
@@ -141,7 +146,7 @@ export function CardForm({ initialData }: CardFormProps) {
             </div>
 
             {error && (
-                <div className="bg-rose-500/10 text-rose-500 p-4 rounded-2xl text-[10px] font-black border border-rose-500/20 uppercase tracking-widest text-center">
+                <div role="alert" className="rounded-xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm leading-relaxed text-rose-200">
                     {error}
                 </div>
             )}
@@ -240,7 +245,7 @@ export function CardForm({ initialData }: CardFormProps) {
 
                 <button
                     type="button"
-                    onClick={() => router.back()}
+                    onClick={() => router.push('/cards')}
                     className="min-h-12 w-full flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-300 transition-colors hover:text-white sm:flex-1 sm:rounded-2xl"
                 >
                     Cancelar Operação
