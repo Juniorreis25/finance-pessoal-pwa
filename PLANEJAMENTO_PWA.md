@@ -6,7 +6,7 @@
 
 **Atualizado em:** 2026-09-24
 **Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento. P5 foi explicitamente adiada.
-**Próxima frente:** após o deploy, validar o fluxo de edição da série com conta de teste e conferir os formulários em viewport iPhone. O usuário informou que aplicou manualmente a migration no Supabase compartilhado; a existência da função ainda não foi verificada independentemente. Exportações e avatar ficam fora da prioridade do MVP atual.
+**Próxima frente:** validar o fluxo de edição da série com conta de teste e conferir os formulários em viewport iPhone. O usuário informou que aplicou manualmente a migration no Supabase compartilhado; a existência da função ainda não foi verificada independentemente. Exportações e avatar ficam fora da prioridade do MVP atual.
 
 ### Frentes concluídas
 
@@ -667,7 +667,9 @@ Ao concluir qualquer frente:
 - Formulários de cartão, recorrência, transação e perfil receberam ajustes de largura/ritmo mobile, mensagens acessíveis, estado de carregamento/erro e destinos previsíveis de cancelar. Cartão valida limite e dias antes de salvar.
 - `npm test`: 91 testes aprovados em 23 arquivos, incluindo a atualização da série; `npm run build`: aprovado; `npm run lint`: sem erros e 4 avisos preexistentes fora dos arquivos desta frente; `git diff --check`: aprovado.
 - O detector estático Impeccable não emitiu apontamentos. O atalho `polish` não existe nesta versão do executável, então a confirmação visual final e validação em iPhone permanecem pendentes.
-- **Status:** código e validação automatizada concluídos localmente; migration aplicada manualmente conforme informação do usuário. Commit, push e deploy ainda pendentes; teste autenticado da edição da série permanece necessário.
+- `94b4750` (`feat: edit complete installment series`) enviado à `main`; deployment de produção `dpl_2eE7ns4B8q9KzYrcY9KdkVgdKqdj` concluído como `READY`, alias `https://finance-pessoal-pwa.vercel.app`; `/api/health` respondeu HTTP 200 com `{"status":"ok"}`.
+- O empacotamento prebuilt local falhou no Windows por erro de symlink `EPERM`; o build remoto do Vercel passou e concluiu a publicação.
+- **Status:** implementação, testes, commit, push e deploy concluídos. A edição autenticada da série e a conferência visual em iPhone ainda precisam de validação manual; a migration foi aplicada conforme informação do usuário, sem verificação independente do schema remoto.
 
 ## 12. Evidências e referências
 
