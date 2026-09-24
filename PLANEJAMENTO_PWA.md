@@ -4,9 +4,9 @@
 
 ## 1. Estado atual
 
-**Atualizado em:** 2026-09-22  
+**Atualizado em:** 2026-09-24
 **Status geral:** P0, P1, P2, P7 e P8 concluídas; P3 validada em nível de API, produção e teste manual; P4 e P6 ainda em andamento. P5 foi explicitamente adiada.
-**Próxima frente:** acompanhar a linha do tempo agrupada por dia após publicação e confirmar o comportamento no iPhone real. Exportações e avatar ficam fora da prioridade do MVP atual.
+**Próxima frente:** validar visualmente os novos gráficos do dashboard no navegador autenticado em viewport iPhone; depois confirmar os fluxos essenciais em aparelho real. Exportações e avatar ficam fora da prioridade do MVP atual.
 
 ### Frentes concluídas
 
@@ -26,6 +26,7 @@
 - [x] P8 concluída: projeto Vercel independente, variáveis públicas, Redirect URL, deployment e testes manuais de produção validados.
 - [x] Plano de commits criado em `PLANO_DE_COMMITS.md`.
 - [x] Linha do tempo mobile por dia: implementação e testes locais concluídos em 2026-09-22; usuário aprovou a versão local e autorizou commit e deploy.
+- [x] Gráficos do dashboard adaptados para leitura mobile em 2026-09-24; implementação e testes automatizados concluídos, aguardando validação visual autenticada.
 
 ### Frentes pendentes
 
@@ -340,7 +341,7 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 
 ### P4 — UX específica para iPhone
 
-**Status:** em andamento; primeira rodada de navegação, safe areas, formulários e gráficos concluída e validada em viewport mobile em 2026-09-22.
+**Status:** em andamento; navegação, safe areas, formulários e timeline já implementados; gráficos do dashboard simplificados em 2026-09-24. Falta validação visual autenticada desses gráficos e validação dos fluxos essenciais em iPhone real.
 **Estimativa:** 4–6 dias.
 
 #### Atividades
@@ -380,6 +381,17 @@ Adicionar ao Supabase as URLs exatas do novo domínio, preservando a URL do web 
 - Rotas `/dashboard`, `/transactions`, `/transactions/new`, `/cards`, `/cards/new`, `/recurring`, `/recurring/new` e `/profile` foram verificadas em viewport 390x844 sem overflow horizontal.
 - Navegação inferior e abertura do menu lateral foram acionadas e verificadas por toque em viewport mobile.
 - Build, typecheck e 68 testes continuam aprovados; lint permanece sem erros.
+
+#### Gráficos do dashboard — implementação local
+
+- Desktop preserva os gráficos Recharts existentes; a mudança substitui apenas as apresentações em telas abaixo de 640px, com espaçamento e cartões mais compactos.
+- Análise anual mobile mostra uma série por vez (Gastos ou Ganhos), barras mensais compactas, seleção do mês e valor exato do mês selecionado.
+- Distribuição por categoria passa de pizza/legenda horizontal para lista ordenada por valor, com valor, percentual e barra proporcional; as cinco primeiras categorias aparecem inicialmente, com expansão sob demanda.
+- Recorrentes vs Cartões passa a exibir dois valores e uma barra proporcional compartilhada, sem pizza.
+- Gasto por Cartão passa a uma lista ordenada com nomes completos, valores e barras proporcionais; mostra três itens inicialmente e permite expandir.
+- Resumo da proporção e valores permanecem em texto para não depender somente de cor ou tooltip. Os cartões mobile usam menos padding, raio e espaçamento; rótulos auxiliares redundantes ficam ocultos no mobile.
+- Quatro testes novos cobrem a alternância de séries, seleção de mês, expansão das listas, proporções e preservação de nomes. Suíte completa: 23 arquivos e 90 testes aprovados; `npx tsc --noEmit` aprovado; lint sem erros e com quatro warnings preexistentes; detector Impeccable sem findings.
+- A tentativa de visualização no navegador local foi redirecionada para login por sessão inativa. A implementação ainda precisa de conferência visual no dashboard autenticado em viewport iPhone; não foi validada em aparelho real.
 
 #### Linha do tempo de transações — publicada
 
@@ -439,7 +451,7 @@ Esta frente não será executada antes da conclusão da compatibilidade mobile e
 
 - Novo teste `src/__tests__/pwa-assets.test.ts` valida manifesto, ícones e isolamento de dados no service worker.
 - Redirect de autenticação também possui cobertura automatizada em `src/lib/supabase/redirect.test.ts`.
-- Total atual: 18 arquivos e 68 testes aprovados.
+- Total atual: 23 arquivos e 90 testes aprovados (inclui quatro testes dos gráficos mobile).
 - Typecheck aprovado.
 
 Ainda pendentes nesta frente: testes de registro/atualização do service worker em navegador real, responsividade visual e auditoria final de dependências/segredos.

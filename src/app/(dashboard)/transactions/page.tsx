@@ -3,7 +3,7 @@
 
 import { Fragment, useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
-import { Plus, ArrowDownRight, ArrowUpRight, ArrowRightLeft, Edit2, Trash2, Search, CreditCard, Wallet, CalendarRange, ListTree, SlidersHorizontal } from 'lucide-react'
+import { Plus, ArrowDownRight, ArrowUpRight, ArrowRightLeft, Edit2, Trash2, Search, CreditCard, Wallet, CalendarRange, ListTree, SlidersHorizontal, Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { format, addMonths, subMonths, parseISO, startOfMonth } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -313,7 +313,7 @@ export default function TransactionsPage() {
                         </p>
                     </div>
                     <button type="button" onClick={toggleVisibility} className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-brand-accent" aria-label={isValuesVisible ? 'Ocultar valores' : 'Mostrar valores'}>
-                        {isValuesVisible ? 'Ocultar' : 'Mostrar'}
+                        {isValuesVisible ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                     </button>
                 </div>
             </div>

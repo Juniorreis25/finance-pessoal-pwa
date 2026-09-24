@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Plus, Edit2, Trash2, Repeat, CheckCircle, XCircle, Search, ArrowUpRight, ArrowRightLeft } from 'lucide-react'
+import { Plus, Edit2, Trash2, Repeat, CheckCircle, XCircle, Search, ArrowUpRight, ArrowRightLeft, Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { RecurringModal } from '@/components/modals/RecurringModal'
@@ -164,8 +164,8 @@ export default function RecurringExpensesPage() {
                             <MaskedValue value={Math.abs(recurringBalance)} prefix={isValuesVisible ? (recurringBalance >= 0 ? 'R$ ' : '− R$ ') : ''} />
                         </p>
                     </div>
-                    <button type="button" onClick={toggleVisibility} className="min-h-11 rounded-xl px-2 text-sm text-brand-accent" aria-label={isValuesVisible ? 'Ocultar valores' : 'Mostrar valores'}>
-                        {isValuesVisible ? 'Ocultar' : 'Mostrar'}
+                    <button type="button" onClick={toggleVisibility} className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-brand-accent" aria-label={isValuesVisible ? 'Ocultar valores' : 'Mostrar valores'}>
+                        {isValuesVisible ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                     </button>
                 </div>
                 <p className="mt-1 text-xs text-slate-400">{filteredExpenses.length} recorrências · {filteredExpenses.filter(item => item.active).length} ativas</p>

@@ -34,4 +34,45 @@ describe('atualizar ao puxar no topo', () => {
         fireEvent.touchEnd(scroll)
         expect(onRefresh).not.toHaveBeenCalled()
     })
+
+    it('não atualiza ao voltar para cima quando o gesto começa no fim da lista', () => {
+        const onRefresh = vi.fn()
+        render(<Fixture onRefresh={onRefresh} />)
+        const scroll = screen.getByTestId('scroll')
+        Object.defineProperty(scroll, 'scrollTop', { configurable: true, value: 500 })
+
+        fireEvent.touchStart(scroll, { touches: [{ identifier: 1, clientY: 200 }] })
+        fireEvent.touchMove(scroll, { touches: [{ identifier: 1, clientY: 50 }] })
+        fireEvent.touchEnd(scroll)
+
+        expect(onRefresh).not.toHaveBeenCalled()
+    })
+
+    it('descarta distância residual quando um novo gesto começa fora do topo', () => {
+        const onRefresh = vi.fn()
+        render(<Fixture onRefresh={onRefresh} />)
+        const scroll = screen.getByTestId('scroll')
+
+        fireEvent.touchStart(scroll, { touches: [{ identifier: 1, clientY: 0 }] })
+        fireEvent.touchMove(scroll, { touches: [{ identifier: 1, clientY: 150 }] })
+
+        Object.defineProperty(scroll, 'scrollTop', { configurable: true, value: 500 })
+        fireEvent.touchStart(scroll, { touches: [{ identifier: 2, clientY: 200 }] })
+        fireEvent.touchEnd(scroll)
+
+        expect(onRefresh).not.toHaveBeenCalled()
+    })
+
+    it('cancela a atualização se a lista sair do topo durante o gesto', () => {
+        const onRefresh = vi.fn()
+        render(<Fixture onRefresh={onRefresh} />)
+        const scroll = screen.getByTestId('scroll')
+
+        fireEvent.touchStart(scroll, { touches: [{ identifier: 1, clientY: 0 }] })
+        fireEvent.touchMove(scroll, { touches: [{ identifier: 1, clientY: 150 }] })
+        Object.defineProperty(scroll, 'scrollTop', { configurable: true, value: 1 })
+        fireEvent.touchEnd(scroll)
+
+        expect(onRefresh).not.toHaveBeenCalled()
+    })
 })

@@ -2,6 +2,7 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { formatChartCurrency } from './chartFormatters'
 
 type FixedVsCardData = {
     name: string
@@ -12,13 +13,38 @@ export function FixedVsCardChart({ data }: { data: FixedVsCardData[] }) {
     const isMobile = useIsMobile(640)
 
     if (!data || data.length === 0 || data.every(d => d.value === 0)) {
-        return <div className="h-[300px] min-h-[300px] flex items-center justify-center text-slate-500 font-medium">Sem dados para exibir</div>
+        return <div className={`flex items-center justify-center text-center text-sm text-slate-400 ${isMobile ? 'min-h-20' : 'h-[300px] min-h-[300px]'}`}>Sem dados para exibir</div>
     }
 
     const COLORS = [
         '#00FF94', // Emerald (Alternative for Fixed)
         '#00F0FF', // Cyan (Credit Card)
     ]
+
+    if (isMobile) {
+        const total = data.reduce((sum, item) => sum + item.value, 0)
+        const recurringShare = total > 0 ? (data[0]?.value ?? 0) / total * 100 : 0
+
+        return (
+            <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                    {data.map((item, index) => (
+                        <div key={item.name} className="min-w-0">
+                            <p className="mb-1 flex items-center gap-2 text-xs text-slate-400">
+                                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} aria-hidden="true" />
+                                <span className="truncate">{item.name}</span>
+                            </p>
+                            <p className="truncate text-base font-semibold tabular-nums text-white">{formatChartCurrency(item.value)}</p>
+                        </div>
+                    ))}
+                </div>
+                <div className="flex h-2 overflow-hidden rounded-full bg-white/10" role="img" aria-label={`Recorrentes ${Math.round(recurringShare)}%, cartões ${Math.round(100 - recurringShare)}%`}>
+                    <div className="h-full bg-emerald-400" style={{ width: `${recurringShare}%` }} />
+                    <div className="h-full bg-cyan-400" style={{ width: `${100 - recurringShare}%` }} />
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="h-[300px] min-h-[300px] min-w-0 w-full">

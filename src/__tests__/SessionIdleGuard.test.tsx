@@ -24,25 +24,27 @@ describe('encerramento por inatividade', () => {
 
     afterEach(() => vi.useRealTimers())
 
-    it('encerra apenas a sessão local após 30 segundos', async () => {
+    it('encerra apenas a sessão local após 1 minuto', async () => {
         render(<SessionIdleGuard />)
-        await act(async () => { await vi.advanceTimersByTimeAsync(30_000) })
+        await act(async () => { await vi.advanceTimersByTimeAsync(59_000) })
+        expect(mocks.signOut).not.toHaveBeenCalled()
+        await act(async () => { await vi.advanceTimersByTimeAsync(1_000) })
         expect(mocks.signOut).toHaveBeenCalledWith({ scope: 'local' })
         expect(mocks.replace).toHaveBeenCalledWith('/login?reason=inactive')
     })
 
     it('reinicia a contagem com uma interação', async () => {
         render(<SessionIdleGuard />)
-        await act(async () => { await vi.advanceTimersByTimeAsync(20_000) })
+        await act(async () => { await vi.advanceTimersByTimeAsync(40_000) })
         fireEvent.pointerDown(document)
-        await act(async () => { await vi.advanceTimersByTimeAsync(20_000) })
+        await act(async () => { await vi.advanceTimersByTimeAsync(40_000) })
         expect(mocks.signOut).not.toHaveBeenCalled()
-        await act(async () => { await vi.advanceTimersByTimeAsync(10_000) })
+        await act(async () => { await vi.advanceTimersByTimeAsync(20_000) })
         expect(mocks.signOut).toHaveBeenCalledTimes(1)
     })
 
     it('não reinicia o prazo ao reabrir a página após inatividade', async () => {
-        localStorage.setItem('finance-pessoal-last-activity', String(Date.now() - 31_000))
+        localStorage.setItem('finance-pessoal-last-activity', String(Date.now() - 61_000))
         await act(async () => { render(<SessionIdleGuard />) })
         expect(mocks.signOut).toHaveBeenCalledWith({ scope: 'local' })
         expect(mocks.replace).toHaveBeenCalledWith('/login?reason=inactive')

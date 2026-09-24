@@ -498,36 +498,36 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Charts Section - Row 1 */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
-                            <div className="flex items-center justify-between mb-8">
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 sm:gap-8">
+                        <section className="min-w-0 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 shadow-none sm:rounded-[2.5rem] sm:p-8 sm:shadow-xl">
+                            <div className="mb-4 flex items-center justify-between gap-3 sm:mb-8">
                                 <h3 className="text-lg font-semibold text-white">Análise Anual</h3>
-                                <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Fluxo de Caixa</div>
+                                <div className="hidden rounded bg-white/5 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-brand-gray sm:block">Fluxo de Caixa</div>
                             </div>
-                            <OverviewChart data={overviewData} />
+                            <OverviewChart data={overviewData} currentMonth={currentDate.getMonth()} />
                         </section>
-                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
-                            <div className="flex items-center justify-between mb-8">
+                        <section className="min-w-0 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 shadow-none sm:rounded-[2.5rem] sm:p-8 sm:shadow-xl">
+                            <div className="mb-4 flex items-center justify-between gap-3 sm:mb-8">
                                 <h3 className="text-lg font-semibold text-white">Distribuição por Categoria</h3>
-                                <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Top Categorias</div>
+                                <div className="hidden rounded bg-white/5 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-brand-gray sm:block">Top Categorias</div>
                             </div>
                             <CategoryChart data={categoryData} />
                         </section>
                     </div>
 
                     {/* Charts Section - Row 2 */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
-                            <div className="flex items-center justify-between mb-8">
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 sm:gap-8">
+                        <section className="min-w-0 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 shadow-none sm:rounded-[2.5rem] sm:p-8 sm:shadow-xl">
+                            <div className="mb-4 flex items-center justify-between gap-3 sm:mb-8">
                                 <h3 className="text-lg font-semibold text-white">Recorrentes vs Cartões</h3>
-                                <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Controle de Peso</div>
+                                <div className="hidden rounded bg-white/5 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-brand-gray sm:block">Composição</div>
                             </div>
                             <FixedVsCardChart data={fixedVsCardData} />
                         </section>
-                        <section className="min-w-0 bg-brand-deep-sea rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 border border-white/5 shadow-xl">
-                            <div className="flex items-center justify-between mb-8">
+                        <section className="min-w-0 rounded-2xl border border-white/5 bg-brand-deep-sea p-4 shadow-none sm:rounded-[2.5rem] sm:p-8 sm:shadow-xl">
+                            <div className="mb-4 flex items-center justify-between gap-3 sm:mb-8">
                                 <h3 className="text-lg font-semibold text-white">Gasto por Cartão</h3>
-                                <div className="text-[10px] font-black bg-white/5 px-2 py-1 rounded text-brand-gray uppercase tracking-widest">Faturas do Mês</div>
+                                <div className="hidden rounded bg-white/5 px-2 py-1 text-[10px] font-black uppercase tracking-widest text-brand-gray sm:block">Faturas do Mês</div>
                             </div>
                             <CardDistributionChart data={cardDistributionData} />
                         </section>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { isLocalDemoMode } from '@/lib/local-demo'
 
-export const IDLE_TIMEOUT_MS = 30_000
+export const IDLE_TIMEOUT_MS = 60_000
 export const ACTIVITY_KEY = 'finance-pessoal-last-activity'
 
 export function SessionIdleGuard() {
