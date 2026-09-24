@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { ArrowUpRight, Wallet, Loader2, Plus, CreditCard, BarChart3, ArrowRightLeft } from 'lucide-react'
+import { ArrowUpRight, Wallet, Loader2, Plus, CreditCard, BarChart3, ArrowRightLeft, Eye, EyeOff } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { OverviewChart } from '@/components/charts/OverviewChart'
 import { CategoryChart } from '@/components/charts/CategoryChart'
@@ -388,8 +388,74 @@ export default function DashboardPage() {
                     {/* Master Card Layout - Asymmetric Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-                        {/* Master Summary Card - Analytical View */}
-                        <div className="md:col-span-12 relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                        {/* Compact summary composition for mobile */}
+                        <div className="md:col-span-12 overflow-hidden rounded-3xl border border-white/10 bg-brand-deep-sea p-5 sm:p-7 lg:hidden">
+                            <div className="grid gap-5 sm:gap-6">
+                                <section aria-labelledby="mobile-monthly-result-title" className="min-w-0">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <h2 id="mobile-monthly-result-title" className="text-sm font-semibold text-slate-300">Resultado do mês</h2>
+                                        <button
+                                            type="button"
+                                            onClick={toggleVisibility}
+                                            className="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-slate-400 transition-colors hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-accent"
+                                            aria-label={isValuesVisible ? "Ocultar valores" : "Mostrar valores"}
+                                        >
+                                            {isValuesVisible ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+                                        </button>
+                                    </div>
+                                    <p className={`mt-1 break-words text-3xl font-bold tracking-tight tabular-nums sm:text-4xl ${stats.balance >= 0 ? 'text-brand-accent' : 'text-rose-400'}`}>
+                                        <MaskedValue value={stats.balance} prefix={isValuesVisible ? "R$ " : ""} />
+                                    </p>
+                                    <div className="mt-5 grid grid-cols-2 divide-x divide-white/10 border-t border-white/10 pt-4">
+                                        <div className="pr-3">
+                                            <p className="text-xs text-slate-400">Ganhos</p>
+                                            <p className="mt-1 truncate text-sm font-semibold tabular-nums text-brand-success sm:text-base">
+                                                <MaskedValue value={stats.income} prefix={isValuesVisible ? "R$ " : ""} />
+                                            </p>
+                                        </div>
+                                        <div className="pl-4">
+                                            <p className="text-xs text-slate-400">Gastos</p>
+                                            <p className="mt-1 truncate text-sm font-semibold tabular-nums text-rose-400 sm:text-base">
+                                                <MaskedValue value={stats.expense} prefix={isValuesVisible ? "R$ " : ""} />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section aria-labelledby="mobile-expense-breakdown-title" className="space-y-3 border-t border-white/10 pt-4">
+                                    <h3 id="mobile-expense-breakdown-title" className="text-xs font-medium text-slate-400">Despesas por tipo</h3>
+                                    <div className="space-y-2.5">
+                                        <div className="flex items-center justify-between gap-3 text-sm">
+                                            <span className="text-slate-300">Recorrentes</span>
+                                            <span className="font-medium tabular-nums text-slate-100"><MaskedValue value={stats.recurringExpense} prefix={isValuesVisible ? "− R$ " : ""} /></span>
+                                        </div>
+                                        <div className="flex items-center justify-between gap-3 text-sm">
+                                            <span className="text-slate-300">Cartões</span>
+                                            <span className="font-medium tabular-nums text-slate-100"><MaskedValue value={stats.cardExpense} prefix={isValuesVisible ? "− R$ " : ""} /></span>
+                                        </div>
+                                        <div className="flex items-center justify-between gap-3 text-sm">
+                                            <span className="text-slate-300">Dinheiro e débito</span>
+                                            <span className="font-medium tabular-nums text-slate-100"><MaskedValue value={stats.cashExpense} prefix={isValuesVisible ? "− R$ " : ""} /></span>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section aria-label="Previsão para o próximo mês" className="flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+                                    <div className="min-w-0">
+                                        <p className="text-xs font-medium text-slate-400">Previsão</p>
+                                        <p className="mt-1 truncate text-sm font-medium capitalize text-slate-200">
+                                            {format(addMonths(currentDate, 1), "MMMM 'de' yyyy", { locale: ptBR })}
+                                        </p>
+                                    </div>
+                                    <p className="shrink-0 text-lg font-semibold tracking-tight tabular-nums text-white sm:text-xl">
+                                        <MaskedValue value={stats.balance + nextMonthStats.income - nextMonthStats.expense} prefix={isValuesVisible ? "R$ " : ""} />
+                                    </p>
+                                </section>
+                            </div>
+                        </div>
+
+                        {/* Master Summary Card - Analytical View (desktop) */}
+                        <div className="hidden md:col-span-12 relative overflow-hidden bg-brand-deep-sea border border-white/5 rounded-[2rem] p-5 sm:rounded-[2.5rem] sm:p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)] lg:block">
                             {/* Background decorative elements */}
                             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-accent/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
                             <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-success/5 blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
